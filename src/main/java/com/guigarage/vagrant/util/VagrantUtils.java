@@ -4,32 +4,32 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import org.apache.commons.io.IOUtils;
 
 /**
  * Some general utilities for Vagrant.
+ * 
  * @author hendrikebbers
- *
+ * @author Peter Fichtner
  */
-public class VagrantUtils {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class VagrantUtils {
 
-	private static VagrantUtils instance;
-
-	private VagrantUtils() {
-	}
-
-	public synchronized static VagrantUtils getInstance() {
-		if (instance == null) {
-			instance = new VagrantUtils();
-		}
-		return instance;
-	}
+	@Getter
+	private static VagrantUtils instance = new VagrantUtils();
 
 	/**
 	 * Creates a URL for a ressource from classpath.
-	 * @param path the path to the needed resource
+	 * 
+	 * @param path
+	 *            the path to the needed resource
 	 * @return URL for the resource
-	 * @throws IOException if the resource is not in the classpath
+	 * @throws IOException
+	 *             if the resource is not in the classpath
 	 */
 	public URL load(String path) throws IOException {
 		URL url = ClassLoader.getSystemClassLoader().getResource(path);
@@ -48,6 +48,7 @@ public class VagrantUtils {
 
 	/**
 	 * Returns a basic Vagrantfile that uses the lucid32 box as template
+	 * 
 	 * @return the content of the Vagrantfile as String
 	 */
 	public String getLucid32MasterContent() {
@@ -61,6 +62,7 @@ public class VagrantUtils {
 
 	/**
 	 * Returns a basic Vagrantfile that uses the lucid64 box as template
+	 * 
 	 * @return the content of the Vagrantfile as String
 	 */
 	public String getLucid64MasterContent() {
@@ -71,9 +73,11 @@ public class VagrantUtils {
 			throw new RuntimeException(exception);
 		}
 	}
-	
+
 	/**
-	 * Returns the default URL for the lucid32 box. The box is hosted at vagrantup.com
+	 * Returns the default URL for the lucid32 box. The box is hosted at
+	 * vagrantup.com
+	 * 
 	 * @return The URL for the box
 	 */
 	public URL getLucid32Url() {
@@ -83,9 +87,11 @@ public class VagrantUtils {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	/**
-	 * Returns the default URL for the lucid64 box. The box is hosted at vagrantup.com
+	 * Returns the default URL for the lucid64 box. The box is hosted at
+	 * vagrantup.com
+	 * 
 	 * @return The URL for the box
 	 */
 	public URL getLucid64Url() {

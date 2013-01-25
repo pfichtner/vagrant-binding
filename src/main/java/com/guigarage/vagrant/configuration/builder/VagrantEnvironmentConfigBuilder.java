@@ -3,22 +3,17 @@ package com.guigarage.vagrant.configuration.builder;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.NoArgsConstructor;
+
 import com.guigarage.vagrant.configuration.VagrantEnvironmentConfig;
 import com.guigarage.vagrant.configuration.VagrantVmConfig;
 import com.guigarage.vagrant.configuration.builder.util.VagrantBuilderException;
 
+@NoArgsConstructor(staticName = "create")
 public class VagrantEnvironmentConfigBuilder {
 
-	private List<VagrantVmConfig> vmConfigs;
+	private List<VagrantVmConfig> vmConfigs = new ArrayList<VagrantVmConfig>();
 
-	public VagrantEnvironmentConfigBuilder() {
-		vmConfigs = new ArrayList<>();
-	}
-
-	public static VagrantEnvironmentConfigBuilder create() {
-		return new VagrantEnvironmentConfigBuilder();
-	}
-	
 	public VagrantEnvironmentConfigBuilder withVagrantVmConfig(
 			VagrantVmConfig vmConfig) {
 		this.vmConfigs.add(vmConfig);
@@ -26,9 +21,11 @@ public class VagrantEnvironmentConfigBuilder {
 	}
 
 	public VagrantEnvironmentConfig build() {
-		if(vmConfigs.isEmpty()) {
+		if (vmConfigs.isEmpty()) {
 			throw new VagrantBuilderException("No vm defined");
 		}
-		return new VagrantEnvironmentConfig(vmConfigs);
+		return new VagrantEnvironmentConfig(new ArrayList<VagrantVmConfig>(
+				this.vmConfigs));
 	}
+
 }

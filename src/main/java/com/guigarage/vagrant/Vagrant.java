@@ -20,87 +20,122 @@ import com.guigarage.vagrant.model.VagrantEnvironment;
 public class Vagrant {
 
 	private ScriptingContainer scriptingContainer;
-	
+
 	public Vagrant() {
 		this(false);
 	}
-	
+
 	public Vagrant(boolean debug) {
 		scriptingContainer = new ScriptingContainer(
 				LocalContextScope.SINGLETHREAD);
-		if(debug) {
+		if (debug) {
 			debug();
 		}
 	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+
 	private void debug() {
-		Map currentEnv = scriptingContainer.getEnvironment();
-		Map newEnv = new HashMap<>(currentEnv);
+		Map<?, ?> currentEnv = scriptingContainer.getEnvironment();
+		Map<Object, Object> newEnv = new HashMap<Object, Object>(currentEnv);
 		newEnv.put("VAGRANT_LOG", "DEBUG");
 		scriptingContainer.setEnvironment(newEnv);
 	}
-	
+
 	public VagrantEnvironment createEnvironment() {
-		RubyObject vagrantEnv = (RubyObject) scriptingContainer.runScriptlet("require 'rubygems'\n"
-				+ "require 'vagrant'\n"
-				+ "\n" + "return Vagrant::Environment.new");
+		RubyObject vagrantEnv = (RubyObject) scriptingContainer
+				.runScriptlet("require 'rubygems'\n" + "require 'vagrant'\n"
+						+ "\n" + "return Vagrant::Environment.new");
 		return new VagrantEnvironment(vagrantEnv);
 	}
-	
+
 	public VagrantEnvironment createEnvironment(File path) {
-		RubyObject vagrantEnv = (RubyObject) scriptingContainer.runScriptlet("require 'rubygems'\n"
-				+ "require 'vagrant'\n"
-				+ "\n" + "return Vagrant::Environment.new(:cwd => '" + path.getAbsolutePath() + "')");
+		RubyObject vagrantEnv = (RubyObject) scriptingContainer
+				.runScriptlet("require 'rubygems'\n" + "require 'vagrant'\n"
+						+ "\n" + "return Vagrant::Environment.new(:cwd => '"
+						+ path.getAbsolutePath() + "')");
 		return new VagrantEnvironment(vagrantEnv);
 	}
-	
-	public VagrantEnvironment createEnvironment(File path, VagrantEnvironmentConfig environmentConfig) throws IOException {
-		return createEnvironment(path, VagrantConfigurationUtilities.createVagrantFileContent(environmentConfig), null, null);
+
+	public VagrantEnvironment createEnvironment(File path,
+			VagrantEnvironmentConfig environmentConfig) throws IOException {
+		return createEnvironment(path,
+				VagrantConfigurationUtilities
+						.createVagrantFileContent(environmentConfig), null,
+				null);
 	}
-	
-	public VagrantEnvironment createEnvironment(File path, VagrantEnvironmentConfig environmentConfig, Iterable<VagrantFileTemplateConfiguration> fileTemplates) throws IOException {
-		return createEnvironment(path, VagrantConfigurationUtilities.createVagrantFileContent(environmentConfig), fileTemplates, null);
+
+	public VagrantEnvironment createEnvironment(File path,
+			VagrantEnvironmentConfig environmentConfig,
+			Iterable<VagrantFileTemplateConfiguration> fileTemplates)
+			throws IOException {
+		return createEnvironment(path,
+				VagrantConfigurationUtilities
+						.createVagrantFileContent(environmentConfig),
+				fileTemplates, null);
 	}
-	
-	public VagrantEnvironment createEnvironment(File path, VagrantEnvironmentConfig environmentConfig, Iterable<VagrantFileTemplateConfiguration> fileTemplates, Iterable<VagrantFolderTemplateConfiguration> folderTemplates) throws IOException {
-		return createEnvironment(path, VagrantConfigurationUtilities.createVagrantFileContent(environmentConfig), fileTemplates, folderTemplates);
+
+	public VagrantEnvironment createEnvironment(File path,
+			VagrantEnvironmentConfig environmentConfig,
+			Iterable<VagrantFileTemplateConfiguration> fileTemplates,
+			Iterable<VagrantFolderTemplateConfiguration> folderTemplates)
+			throws IOException {
+		return createEnvironment(path,
+				VagrantConfigurationUtilities
+						.createVagrantFileContent(environmentConfig),
+				fileTemplates, folderTemplates);
 	}
-	
-	public VagrantEnvironment createEnvironment(File path, VagrantConfiguration configuration) throws IOException {
-		return createEnvironment(path, VagrantConfigurationUtilities.createVagrantFileContent(configuration.getEnvironmentConfig()), configuration.getFileTemplateConfigurations(), configuration.getFolderTemplateConfigurations());
+
+	public VagrantEnvironment createEnvironment(File path,
+			VagrantConfiguration configuration) throws IOException {
+		return createEnvironment(path,
+				VagrantConfigurationUtilities
+						.createVagrantFileContent(configuration
+								.getEnvironmentConfig()),
+				configuration.getFileTemplateConfigurations(),
+				configuration.getFolderTemplateConfigurations());
 	}
-	
-	public VagrantEnvironment createEnvironment(File path, String vagrantfileContent, Iterable<VagrantFileTemplateConfiguration> fileTemplates, Iterable<VagrantFolderTemplateConfiguration> folderTemplates) throws IOException {
+
+	public VagrantEnvironment createEnvironment(File path,
+			String vagrantfileContent,
+			Iterable<VagrantFileTemplateConfiguration> fileTemplates,
+			Iterable<VagrantFolderTemplateConfiguration> folderTemplates)
+			throws IOException {
 		path.mkdirs();
 		File vagrantFile = new File(path, "Vagrantfile");
-		if(!vagrantFile.exists()) {
+		if (!vagrantFile.exists()) {
 			vagrantFile.createNewFile();
 		}
 		FileUtils.writeStringToFile(vagrantFile, vagrantfileContent, false);
-		if(fileTemplates != null) {
-			for(VagrantFileTemplateConfiguration fileTemplate : fileTemplates) {
-				File fileInVagrantFolder = new File(path, fileTemplate.getPathInVagrantFolder());
-				if(fileInVagrantFolder.getParentFile() != null && !fileInVagrantFolder.getParentFile().exists()) {
+		if (fileTemplates != null) {
+			for (VagrantFileTemplateConfiguration fileTemplate : fileTemplates) {
+				File fileInVagrantFolder = new File(path,
+						fileTemplate.getPathInVagrantFolder());
+				if (fileInVagrantFolder.getParentFile() != null
+						&& !fileInVagrantFolder.getParentFile().exists()) {
 					fileInVagrantFolder.getParentFile().mkdirs();
 				}
-				if(fileTemplate.useLocalFile()) {
-					FileUtils.copyFile(fileTemplate.getLocalFile(), fileInVagrantFolder);
+				if (fileTemplate.useLocalFile()) {
+					FileUtils.copyFile(fileTemplate.getLocalFile(),
+							fileInVagrantFolder);
 				} else {
-					FileUtils.copyURLToFile(fileTemplate.getUrlTemplate(), fileInVagrantFolder);
+					FileUtils.copyURLToFile(fileTemplate.getUrlTemplate(),
+							fileInVagrantFolder);
 				}
 			}
 		}
-		if(folderTemplates != null) {
-			for(VagrantFolderTemplateConfiguration folderTemplate : folderTemplates) {
-				File folderInVagrantFolder = new File(path, folderTemplate.getPathInVagrantFolder());
-				if(folderTemplate.useUriTemplate()) {
-					FileUtils.copyDirectory(new File(folderTemplate.getUriTemplate()), folderInVagrantFolder);
+		if (folderTemplates != null) {
+			for (VagrantFolderTemplateConfiguration folderTemplate : folderTemplates) {
+				File folderInVagrantFolder = new File(path,
+						folderTemplate.getPathInVagrantFolder());
+				if (folderTemplate.useUriTemplate()) {
+					FileUtils.copyDirectory(
+							new File(folderTemplate.getUriTemplate()),
+							folderInVagrantFolder);
 				} else {
-					FileUtils.copyDirectory(folderTemplate.getLocalFolder(), folderInVagrantFolder);
+					FileUtils.copyDirectory(folderTemplate.getLocalFolder(),
+							folderInVagrantFolder);
 				}
 			}
 		}
 		return createEnvironment(path);
-	}	
+	}
 }

@@ -1,45 +1,31 @@
 package com.guigarage.vagrant.configuration.builder;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import com.guigarage.vagrant.configuration.VagrantPortForwarding;
 import com.guigarage.vagrant.configuration.builder.util.VagrantBuilderException;
 
+@NoArgsConstructor(staticName = "create")
+@Accessors(fluent = true, chain = true)
+@Setter
 public class VagrantPortForwardingBuilder {
 
-	private int guestport;
+	private int withGuestport = -1;
 
-	private int hostport;
+	private int withHostport = -1;
 
-	private String name;
-	
-	public VagrantPortForwardingBuilder() {
-	}
-	
-	public static VagrantPortForwardingBuilder create() {
-		return new VagrantPortForwardingBuilder();
-	}
-	
-	public VagrantPortForwardingBuilder withHostPort(int hostport) {
-		this.hostport = hostport;
-		return this;
-	}
+	private String withName;
 
-	public VagrantPortForwardingBuilder withGuestPort(int guestport) {
-		this.guestport = guestport;
-		return this;
-	}
-	
-	public VagrantPortForwardingBuilder withName(String name) {
-		this.name = name;
-		return this;
-	}
-	
 	public VagrantPortForwarding build() {
-		if(guestport < 0) {
+		if (withGuestport < 0) {
 			throw new VagrantBuilderException("no guestport defined");
 		}
-		if(hostport < 0) {
+		if (withHostport < 0) {
 			throw new VagrantBuilderException("no hostport defined");
 		}
-		return new VagrantPortForwarding(name, guestport, hostport);
+		return new VagrantPortForwarding(withName, withGuestport, withHostport);
 	}
+
 }

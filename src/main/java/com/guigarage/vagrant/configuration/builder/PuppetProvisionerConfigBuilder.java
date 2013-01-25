@@ -1,61 +1,40 @@
 package com.guigarage.vagrant.configuration.builder;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import com.guigarage.vagrant.configuration.PuppetProvisionerConfig;
 import com.guigarage.vagrant.configuration.builder.util.VagrantBuilderException;
 
 /**
  * Builder for {@link PuppetProvisionerConfig}
+ * 
  * @author hendrikebbers
- *
+ * @author Peter Fichtner
  */
+@NoArgsConstructor(staticName = "create")
+@Accessors(fluent = true, chain = true)
+@Setter
 public class PuppetProvisionerConfigBuilder {
 
-	private String manifestPath;
-	
-	private String manifestFile;
-	
-	private boolean debug;
-	
-	private String modulesPath;
-	
-	public PuppetProvisionerConfigBuilder() {
-	}
-	
-	/**
-	 * creates a new {@link PuppetProvisionerConfigBuilder}
-	 * @return a new {@link PuppetProvisionerConfigBuilder}
-	 */
-	public static PuppetProvisionerConfigBuilder create() {
-		return new PuppetProvisionerConfigBuilder();
-	}
-	
-	public PuppetProvisionerConfigBuilder withManifestFile(String manifestFile) {
-		this.manifestFile = manifestFile;
-		return this;
-	}
-	
-	public PuppetProvisionerConfigBuilder withManifestPath(String manifestPath) {
-		this.manifestPath = manifestPath;
-		return this;
-	}
-	
-	public PuppetProvisionerConfigBuilder withModulesPath(String modulesPath) {
-		this.modulesPath = modulesPath;
-		return this;
-	}
-	
-	public PuppetProvisionerConfigBuilder withDebug(boolean debug) {
-		this.debug = debug;
-		return this;
-	}
-	
+	private String withManifestPath;
+
+	private String withManifestFile;
+
+	private boolean withDebug;
+
+	private String withModulesPath;
+
 	public PuppetProvisionerConfig build() {
-		if(manifestPath == null) {
+		if (withManifestPath == null) {
 			throw new VagrantBuilderException("no manifestPath defined!");
 		}
-		if(manifestFile == null) {
+		if (withManifestFile == null) {
 			throw new VagrantBuilderException("no manifestFile defined!");
 		}
-		return new PuppetProvisionerConfig(debug, manifestPath, manifestFile, modulesPath);
+		return new PuppetProvisionerConfig(withDebug, withManifestPath,
+				withManifestFile, withModulesPath);
 	}
+
 }

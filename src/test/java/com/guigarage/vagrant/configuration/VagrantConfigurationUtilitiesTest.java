@@ -29,7 +29,7 @@ public class VagrantConfigurationUtilitiesTest {
 		}
 		
 		try {
-			ArrayList<VagrantVmConfig> vmConfigs = new ArrayList<>();
+			ArrayList<VagrantVmConfig> vmConfigs = new ArrayList<VagrantVmConfig>();
 			vmConfigs.add(new VagrantVmConfig("unitTest", null, null, "lucid32", null, null, null, false));
 			VagrantEnvironmentConfig config = new VagrantEnvironmentConfig(vmConfigs);
 			String vagrantFileContent = VagrantConfigurationUtilities

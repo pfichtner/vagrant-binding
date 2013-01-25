@@ -3,10 +3,15 @@ package com.guigarage.vagrant.configuration;
 import java.io.File;
 import java.net.URI;
 
+import lombok.Getter;
+
+@Getter
 public class VagrantFolderTemplateConfiguration {
 
-	//TODO: Das kopieren der Dateien sollte in eine Methode in dieser Klasse augelagert werden die das VagrantEnvironment als Übergabeparameter bekommt.
-	
+	// TODO: Das kopieren der Dateien sollte in eine Methode in dieser Klasse
+	// augelagert werden die das VagrantEnvironment als Übergabeparameter
+	// bekommt.
+
 	private File localFolder;
 
 	private String pathInVagrantFolder;
@@ -18,11 +23,15 @@ public class VagrantFolderTemplateConfiguration {
 		this.uriTemplate = uriTemplate;
 		this.pathInVagrantFolder = pathInVagrantFolder;
 	}
-	
+
 	/**
-	 * Creates a new {@link VagrantFolderTemplateConfiguration} that uses a local path for the template folder
-	 * @param localFile locale path of the template folder
-	 * @param pathInVagrantFolder path in Vagrant folder where the template should be copied
+	 * Creates a new {@link VagrantFolderTemplateConfiguration} that uses a
+	 * local path for the template folder
+	 * 
+	 * @param localFile
+	 *            locale path of the template folder
+	 * @param pathInVagrantFolder
+	 *            path in Vagrant folder where the template should be copied
 	 */
 	public VagrantFolderTemplateConfiguration(File localFolder,
 			String pathInVagrantFolder) {
@@ -31,25 +40,7 @@ public class VagrantFolderTemplateConfiguration {
 	}
 
 	public boolean useUriTemplate() {
-		if (uriTemplate != null) {
-			return true;
-		}
-		return false;
+		return uriTemplate != null;
 	}
-	
-	public File getLocalFolder() {
-		return localFolder;
-	}
-	
-	/**
-	 * Returns the path inside the Vagrant folder where the template should be copied to.
-	 * @return the path inside the Vagrant folder
-	 */
-	public String getPathInVagrantFolder() {
-		return pathInVagrantFolder;
-	}
-	
-	public URI getUriTemplate() {
-		return uriTemplate;
-	}
+
 }

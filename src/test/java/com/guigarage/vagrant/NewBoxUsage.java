@@ -18,28 +18,25 @@ import com.guigarage.vagrant.util.VagrantUtils;
 public class NewBoxUsage {
 
 	@Test
-	public void initWithNewBox() {
+	public void initWithNewBox() throws IOException {
 		String boxName = "unitTestBox" + System.currentTimeMillis();
 
 		Vagrant vagrant = new Vagrant(true);
 		File vagrantTempDir = VagrantTestUtils.createTempDir();
-		VagrantVmConfig vmConfig = new VagrantVmConfigBuilder()
+		VagrantVmConfig vmConfig = VagrantVmConfigBuilder.create()
 				.withBoxName(boxName)
 				.withBoxUrl(VagrantUtils.getInstance().getLucid32Url())
 				.withName("UniTestVm").build();
-		VagrantEnvironmentConfig envConfig = new VagrantEnvironmentConfigBuilder()
-				.withVagrantVmConfig(vmConfig).build();
+		VagrantEnvironmentConfig envConfig = VagrantEnvironmentConfigBuilder
+				.create().withVagrantVmConfig(vmConfig).build();
 
 		VagrantEnvironment environment = null;
 
 		try {
 			environment = vagrant.createEnvironment(vagrantTempDir, envConfig);
 			environment.up();
-		} catch (Exception exception) {
-			exception.printStackTrace();
-			Assert.fail(exception.getMessage());
 		} finally {
-			if(environment != null) {
+			if (environment != null) {
 				try {
 					environment.removeBox(boxName);
 					environment.destroy();
@@ -55,12 +52,12 @@ public class NewBoxUsage {
 					}
 				} catch (Exception removeException) {
 					removeException.printStackTrace();
-					
+
 					String boxPath = null;
 					try {
 						boxPath = environment.getBoxesPath();
 					} catch (Exception e) {
-						//...
+						// ...
 					}
 					try {
 						FileUtils.forceDelete(vagrantTempDir);
@@ -72,9 +69,10 @@ public class NewBoxUsage {
 									+ vagrantTempDir);
 						}
 					}
-					if(boxPath != null) {
+					if (boxPath != null) {
 						Assert.fail("Can not remove box " + boxName
-								+ "! Please remove it manually. (BoxPath:" + boxPath + ")");
+								+ "! Please remove it manually. (BoxPath:"
+								+ boxPath + ")");
 					} else {
 						Assert.fail("Can not remove box " + boxName
 								+ "! Please remove it manually.");

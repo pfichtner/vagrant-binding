@@ -18,14 +18,13 @@ import com.guigarage.vagrant.configuration.builder.VagrantVmConfigBuilder;
 public class VagrantSSHTests {
 
 	@Test
-	public void testSSHExecute() {
+	public void testSSHExecute() throws IOException {
 		Vagrant vagrant = new Vagrant(true);
 		File vagrantTempDir = VagrantTestUtils.createTempDir();
-		VagrantVmConfig vmConfig = new VagrantVmConfigBuilder()
-				.withLucid32Box()
-				.withName("UniTestVm").build();
-		VagrantEnvironmentConfig envConfig = new VagrantEnvironmentConfigBuilder()
-				.withVagrantVmConfig(vmConfig).build();
+		VagrantVmConfig vmConfig = VagrantVmConfigBuilder.create()
+				.withLucid32Box().withName("UniTestVm").build();
+		VagrantEnvironmentConfig envConfig = VagrantEnvironmentConfigBuilder
+				.create().withVagrantVmConfig(vmConfig).build();
 
 		VagrantEnvironment environment = null;
 
@@ -33,16 +32,14 @@ public class VagrantSSHTests {
 			environment = vagrant.createEnvironment(vagrantTempDir, envConfig);
 			environment.up();
 			try {
-				VagrantSSHConnection connection = environment.getAllVms().iterator().next().createConnection();
+				VagrantSSHConnection connection = environment.getAllVms()
+						.iterator().next().createConnection();
 				connection.execute("touch /vagrant/testfile1", true);
 				File touchedFile = new File(vagrantTempDir, "testfile1");
 				Assert.assertEquals(true, touchedFile.exists());
 			} finally {
 				environment.destroy();
 			}
-		} catch (Exception exception) {
-			exception.printStackTrace();
-			Assert.fail(exception.getMessage());
 		} finally {
 			try {
 				FileUtils.forceDelete(vagrantTempDir);
@@ -56,16 +53,15 @@ public class VagrantSSHTests {
 			}
 		}
 	}
-	
+
 	@Test
-	public void testSSHUpload() {
+	public void testSSHUpload() throws IOException {
 		Vagrant vagrant = new Vagrant(true);
 		File vagrantTempDir = VagrantTestUtils.createTempDir();
-		VagrantVmConfig vmConfig = new VagrantVmConfigBuilder()
-				.withLucid32Box()
-				.withName("UniTestVm").build();
-		VagrantEnvironmentConfig envConfig = new VagrantEnvironmentConfigBuilder()
-				.withVagrantVmConfig(vmConfig).build();
+		VagrantVmConfig vmConfig = VagrantVmConfigBuilder.create()
+				.withLucid32Box().withName("UniTestVm").build();
+		VagrantEnvironmentConfig envConfig = VagrantEnvironmentConfigBuilder
+				.create().withVagrantVmConfig(vmConfig).build();
 
 		VagrantEnvironment environment = null;
 
@@ -73,12 +69,14 @@ public class VagrantSSHTests {
 			environment = vagrant.createEnvironment(vagrantTempDir, envConfig);
 			environment.up();
 			try {
-				VagrantSSHConnection connection = environment.getAllVms().iterator().next().createConnection();
+				VagrantSSHConnection connection = environment.getAllVms()
+						.iterator().next().createConnection();
 				File tempFile = File.createTempFile("vagrant", "test");
 				try {
 					tempFile.createNewFile();
 					FileUtils.write(tempFile, "Vagrant-Unit-Test", false);
-					connection.upload(tempFile.getAbsolutePath(), "/vagrant/testfile1");
+					connection.upload(tempFile.getAbsolutePath(),
+							"/vagrant/testfile1");
 				} finally {
 					try {
 						FileUtils.forceDelete(tempFile);
@@ -91,16 +89,14 @@ public class VagrantSSHTests {
 						}
 					}
 				}
-				
+
 				File createdFile = new File(vagrantTempDir, "testfile1");
 				Assert.assertEquals(true, createdFile.exists());
-				Assert.assertEquals("Vagrant-Unit-Test", FileUtils.readFileToString(createdFile));
+				Assert.assertEquals("Vagrant-Unit-Test",
+						FileUtils.readFileToString(createdFile));
 			} finally {
 				environment.destroy();
 			}
-		} catch (Exception exception) {
-			exception.printStackTrace();
-			Assert.fail(exception.getMessage());
 		} finally {
 			try {
 				FileUtils.forceDelete(vagrantTempDir);

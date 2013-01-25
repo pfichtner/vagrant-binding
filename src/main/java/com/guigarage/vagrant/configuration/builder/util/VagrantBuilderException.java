@@ -1,27 +1,28 @@
 package com.guigarage.vagrant.configuration.builder.util;
 
+import lombok.NoArgsConstructor;
+
 /**
  * The default Exception for all builder classes.
+ * 
  * @author hendrikebbers
- *
+ * @author Peter Fichtner
  */
+@NoArgsConstructor
 public class VagrantBuilderException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public VagrantBuilderException() {
-        super();
-    }
+	public VagrantBuilderException(String message) {
+		super(message);
+	}
 
-    public VagrantBuilderException(String message) {
-        super(message);
-    }
+	public VagrantBuilderException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
-    public VagrantBuilderException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public VagrantBuilderException(Throwable cause) {
+		super(cause);
+	}
 
-    public VagrantBuilderException(Throwable cause) {
-        super(cause);
-    }
 }
