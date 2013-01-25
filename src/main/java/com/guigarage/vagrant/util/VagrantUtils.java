@@ -23,7 +23,7 @@ public final class VagrantUtils {
 	private static VagrantUtils instance = new VagrantUtils();
 
 	/**
-	 * Creates a URL for a ressource from classpath.
+	 * Creates a URL for a resource from classpath.
 	 * 
 	 * @param path
 	 *            the path to the needed resource

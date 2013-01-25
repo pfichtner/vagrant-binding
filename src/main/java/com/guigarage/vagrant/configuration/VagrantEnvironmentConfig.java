@@ -6,7 +6,6 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 /**
  * Holds the configuration of a Vagrant environment.
  * 

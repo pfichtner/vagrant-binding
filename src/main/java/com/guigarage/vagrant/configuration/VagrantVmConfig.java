@@ -75,19 +75,19 @@ public class VagrantVmConfig {
 		this.hostName = hostName;
 		this.guiMode = guiMode;
 	}
-	
+
 	@NoArgsConstructor(staticName = "create")
 	@Accessors(fluent = true, chain = true)
 	@Setter
 	public static class Builder {
 
-		private List<VagrantPortForwarding> withPortForwardings = new ArrayList<VagrantPortForwarding>();
+		private List<VagrantPortForwarding> vagrantPortForwarding = new ArrayList<VagrantPortForwarding>();
 
 		private PuppetProvisionerConfig withPuppetProvisionerConfig;
 
 		private String withName;
 
-		private String withIp;
+		private String withHostOnlyIp;
 
 		private String withBoxName;
 
@@ -97,12 +97,20 @@ public class VagrantVmConfig {
 
 		private boolean withGuiMode;
 
+		public Builder withVagrantPortForwarding(
+				VagrantPortForwarding vagrantPortForwarding) {
+			this.vagrantPortForwarding.add(vagrantPortForwarding);
+			return this;
+		}
+
 		public Builder withLucid32Box() {
-			return withBox("lucid32", VagrantUtils.getInstance().getLucid32Url());
+			return withBox("lucid32", VagrantUtils.getInstance()
+					.getLucid32Url());
 		}
 
 		public Builder withLucid64Box() {
-			return withBox("lucid64", VagrantUtils.getInstance().getLucid64Url());
+			return withBox("lucid64", VagrantUtils.getInstance()
+					.getLucid64Url());
 		}
 
 		private Builder withBox(String name, URL url) {
@@ -113,12 +121,11 @@ public class VagrantVmConfig {
 			if (withBoxName == null) {
 				throw new VagrantBuilderException("No boxName defined");
 			}
-			return new VagrantVmConfig(withName, withIp, withHostName, withBoxName,
-					withBoxUrl, withPortForwardings, withPuppetProvisionerConfig,
-					withGuiMode);
+			return new VagrantVmConfig(withName, withHostOnlyIp, withHostName,
+					withBoxName, withBoxUrl, vagrantPortForwarding,
+					withPuppetProvisionerConfig, withGuiMode);
 		}
 
 	}
-
 
 }

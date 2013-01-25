@@ -1,9 +1,9 @@
 package com.guigarage.vagrant;
 
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.IOException;
-
-import junit.framework.Assert;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
@@ -68,13 +68,13 @@ public class NewBoxUsage {
 									+ vagrantTempDir);
 						}
 					}
-					if (boxPath != null) {
-						Assert.fail("Can not remove box " + boxName
+					if (boxPath == null) {
+						fail("Can not remove box " + boxName
+								+ "! Please remove it manually.");
+					} else {
+						fail("Can not remove box " + boxName
 								+ "! Please remove it manually. (BoxPath:"
 								+ boxPath + ")");
-					} else {
-						Assert.fail("Can not remove box " + boxName
-								+ "! Please remove it manually.");
 					}
 				}
 			}

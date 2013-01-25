@@ -1,29 +1,26 @@
 package com.guigarage.vagrant.util;
 
-import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
 public class MasterFetchTests {
 
 	@Test
-	public void fetchMasterConfigs() {
-		try {
-			String content = VagrantUtils.getInstance().getLucid32MasterContent();
-			Assert.assertEquals(true, content != null);
-			Assert.assertEquals(true, content.length() > 0);
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail(e.getMessage());
+	public void testFetchMasterConfigs() {
+		{
+			String content = VagrantUtils.getInstance()
+					.getLucid32MasterContent();
+			assertNotNull(content);
+			assertEquals(true, !content.isEmpty());
 		}
-		
-		try {
-			String content = VagrantUtils.getInstance().getLucid64MasterContent();
-			Assert.assertEquals(true, content != null);
-			Assert.assertEquals(true, content.length() > 0);
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail(e.getMessage());
+
+		{
+			String content = VagrantUtils.getInstance()
+					.getLucid64MasterContent();
+			assertNotNull(content);
+			assertEquals(true, !content.isEmpty());
 		}
+
 	}
 }

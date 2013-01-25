@@ -1,9 +1,9 @@
 package com.guigarage.vagrant.model;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
-
-import junit.framework.Assert;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
@@ -11,7 +11,6 @@ import org.junit.Test;
 import com.guigarage.vagrant.Vagrant;
 import com.guigarage.vagrant.VagrantTestUtils;
 import com.guigarage.vagrant.configuration.VagrantEnvironmentConfig;
-import com.guigarage.vagrant.configuration.VagrantEnvironmentConfig.Builder;
 import com.guigarage.vagrant.configuration.VagrantVmConfig;
 
 public class VagrantSSHTests {
@@ -35,7 +34,7 @@ public class VagrantSSHTests {
 						.iterator().next().createConnection();
 				connection.execute("touch /vagrant/testfile1", true);
 				File touchedFile = new File(vagrantTempDir, "testfile1");
-				Assert.assertEquals(true, touchedFile.exists());
+				assertEquals(true, touchedFile.exists());
 			} finally {
 				environment.destroy();
 			}
@@ -90,8 +89,8 @@ public class VagrantSSHTests {
 				}
 
 				File createdFile = new File(vagrantTempDir, "testfile1");
-				Assert.assertEquals(true, createdFile.exists());
-				Assert.assertEquals("Vagrant-Unit-Test",
+				assertEquals(true, createdFile.exists());
+				assertEquals("Vagrant-Unit-Test",
 						FileUtils.readFileToString(createdFile));
 			} finally {
 				environment.destroy();

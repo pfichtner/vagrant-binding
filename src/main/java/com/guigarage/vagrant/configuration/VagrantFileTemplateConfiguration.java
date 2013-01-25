@@ -87,19 +87,19 @@ public class VagrantFileTemplateConfiguration {
 	// TODO PF split into to classes
 	public static class Builder {
 
-		private File localFile;
+		private File withLocalFile;
 
-		private URL urlTemplate;
+		private URL withUrlTemplate;
 
-		private String pathInVagrantFolder;
+		private String withPathInVagrantFolder;
 
 		public VagrantFileTemplateConfiguration build() {
-			if (localFile != null) {
-				return new VagrantFileTemplateConfiguration(localFile,
-						pathInVagrantFolder);
+			if (withLocalFile != null) {
+				return new VagrantFileTemplateConfiguration(withLocalFile,
+						withPathInVagrantFolder);
 			} else {
-				return new VagrantFileTemplateConfiguration(urlTemplate,
-						pathInVagrantFolder);
+				return new VagrantFileTemplateConfiguration(withUrlTemplate,
+						withPathInVagrantFolder);
 			}
 		}
 	}

@@ -90,36 +90,31 @@ After starting your virtual machine you can use SHH to connect on the machine. "
 Vagrant-Binding offers a special <a title="JUnit Rule" href="http://www.junit.org/node/580">@Rule for JUnit</a>. By using this Rule you can capsule each of your tests with a fully vm lifecycle. Let us assume we have the following Unit Test:
 
     @Test
-    public void testJdbc() {
+    public void testJdbc() throws Exeption {
         System.out.println("Test starts");
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager
-                .getConnection("jdbc:mysql://192.168.50.4/testapp?"
-                + "user=dbuser&amp;password=dbuser");
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection connection = DriverManager
+            .getConnection("jdbc:mysql://192.168.50.4/testapp?"
+            + "user=dbuser&amp;password=dbuser");
 
-            Statement statement = connection.createStatement();
-            String table = "CREATE TABLE mytable (data_entry VARCHAR(254))";
-            statement.executeUpdate(table);
-            statement.close();
-    
-            for(int i=0; i &lt; 100; i++) {
-                statement = connection.createStatement();
-                statement.executeUpdate("INSERT INTO mytable VALUES(\"" + UUID.randomUUID().toString() + "\")");
-                statement.close();
-            }
-            
+        Statement statement = connection.createStatement();
+        String table = "CREATE TABLE mytable (data_entry VARCHAR(254))";
+        statement.executeUpdate(table);
+        statement.close();
+
+        for(int i=0; i &lt; 100; i++) {
             statement = connection.createStatement();
-            ResultSet resultSet = statement
-                .executeQuery("SELECT COUNT(*) FROM mytable");
-            resultSet.next();
-            Assert.assertEquals(100, resultSet.getInt(1));
+            statement.executeUpdate("INSERT INTO mytable VALUES(\"" + UUID.randomUUID().toString() + "\")");
             statement.close();
-            connection.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
         }
+        
+        statement = connection.createStatement();
+        ResultSet resultSet = statement
+            .executeQuery("SELECT COUNT(*) FROM mytable");
+        resultSet.next();
+        assertEquals(100, resultSet.getInt(1));
+        statement.close();
+        connection.close();
     }
 
 The test creates the table "mytable", adds 100 rows into it and checks the rowcount. To run this test successfully you need a machine with the hard ip "192.168.50.4" and a MySQL Server. You need a database "testapp" on the server too. On this database there must not be a table called "mytable". So you can only run this Unit Test one time because it doesn't drop the table "mytable" at the end. You can expand the test and drop the table at the end but what will happen in case of an error? Every time the test starts automatically you do not know the state of the server, database and table. Another problem is that you can't run the test parallel.
