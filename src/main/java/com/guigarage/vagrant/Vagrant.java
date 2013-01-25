@@ -26,7 +26,7 @@ public class Vagrant {
 	}
 
 	public Vagrant(boolean debug) {
-		scriptingContainer = new ScriptingContainer(
+		this.scriptingContainer = new ScriptingContainer(
 				LocalContextScope.SINGLETHREAD);
 		if (debug) {
 			debug();
@@ -34,21 +34,21 @@ public class Vagrant {
 	}
 
 	private void debug() {
-		Map<?, ?> currentEnv = scriptingContainer.getEnvironment();
+		Map<?, ?> currentEnv = this.scriptingContainer.getEnvironment();
 		Map<Object, Object> newEnv = new HashMap<Object, Object>(currentEnv);
 		newEnv.put("VAGRANT_LOG", "DEBUG");
-		scriptingContainer.setEnvironment(newEnv);
+		this.scriptingContainer.setEnvironment(newEnv);
 	}
 
 	public VagrantEnvironment createEnvironment() {
-		RubyObject vagrantEnv = (RubyObject) scriptingContainer
+		RubyObject vagrantEnv = (RubyObject) this.scriptingContainer
 				.runScriptlet("require 'rubygems'\n" + "require 'vagrant'\n"
 						+ "\n" + "return Vagrant::Environment.new");
 		return new VagrantEnvironment(vagrantEnv);
 	}
 
 	public VagrantEnvironment createEnvironment(File path) {
-		RubyObject vagrantEnv = (RubyObject) scriptingContainer
+		RubyObject vagrantEnv = (RubyObject) this.scriptingContainer
 				.runScriptlet("require 'rubygems'\n" + "require 'vagrant'\n"
 						+ "\n" + "return Vagrant::Environment.new(:cwd => '"
 						+ path.getAbsolutePath() + "')");

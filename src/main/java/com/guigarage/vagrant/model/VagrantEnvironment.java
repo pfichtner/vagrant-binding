@@ -32,11 +32,8 @@ public class VagrantEnvironment {
 	 */
 	public void up() {
 		try {
-			vagrantEnvironment
-					.callMethod(
-							"cli",
-							RubyString.newString(
-									vagrantEnvironment.getRuntime(), "up"));
+			this.vagrantEnvironment.callMethod("cli", RubyString.newString(
+					this.vagrantEnvironment.getRuntime(), "up"));
 		} catch (RaiseException exception) {
 			throw new VagrantException(exception);
 		}
@@ -53,10 +50,10 @@ public class VagrantEnvironment {
 	 */
 	public void addBox(String boxName, URL boxUrl) {
 		try {
-			vagrantEnvironment.callMethod("cli", RubyString.newString(
-					vagrantEnvironment.getRuntime(), "add"), RubyString
-					.newString(vagrantEnvironment.getRuntime(), boxName),
-					RubyString.newString(vagrantEnvironment.getRuntime(),
+			this.vagrantEnvironment.callMethod("cli", RubyString.newString(
+					this.vagrantEnvironment.getRuntime(), "add"), RubyString
+					.newString(this.vagrantEnvironment.getRuntime(), boxName),
+					RubyString.newString(this.vagrantEnvironment.getRuntime(),
 							boxUrl.toString()));
 		} catch (RaiseException exception) {
 			throw new VagrantException(exception);
@@ -71,7 +68,7 @@ public class VagrantEnvironment {
 	 */
 	public void removeBox(String boxName) {
 		try {
-			RubyArray boxes = (RubyArray) ((RubyObject) vagrantEnvironment
+			RubyArray boxes = (RubyArray) ((RubyObject) this.vagrantEnvironment
 					.callMethod("boxes")).getInternalVariable("@boxes");
 			for (Object box : boxes) {
 				String name = ((RubyObject) box).callMethod("name").toString();
@@ -92,8 +89,8 @@ public class VagrantEnvironment {
 	 */
 	public String getBoxesPath() {
 		try {
-			return ((RubyObject) vagrantEnvironment.callMethod("boxes_path"))
-					.toString();
+			return ((RubyObject) this.vagrantEnvironment
+					.callMethod("boxes_path")).toString();
 		} catch (RaiseException exception) {
 			throw new VagrantException(exception);
 		}
@@ -108,9 +105,9 @@ public class VagrantEnvironment {
 	 */
 	public void init(String boxName) {
 		try {
-			vagrantEnvironment.callMethod("cli", RubyString.newString(
-					vagrantEnvironment.getRuntime(), "init"), RubyString
-					.newString(vagrantEnvironment.getRuntime(), boxName));
+			this.vagrantEnvironment.callMethod("cli", RubyString.newString(
+					this.vagrantEnvironment.getRuntime(), "init"), RubyString
+					.newString(this.vagrantEnvironment.getRuntime(), boxName));
 		} catch (RaiseException exception) {
 			throw new VagrantException(exception);
 		}
@@ -123,8 +120,8 @@ public class VagrantEnvironment {
 	 */
 	public boolean isMultiVmEnvironment() {
 		try {
-			return ((RubyBoolean) vagrantEnvironment.callMethod("multivm?"))
-					.isTrue();
+			return ((RubyBoolean) this.vagrantEnvironment
+					.callMethod("multivm?")).isTrue();
 		} catch (RaiseException exception) {
 			throw new VagrantException(exception);
 		}
@@ -137,8 +134,8 @@ public class VagrantEnvironment {
 	 */
 	public String getRootPath() {
 		try {
-			return ((RubyObject) vagrantEnvironment.callMethod("root_path"))
-					.toString();
+			return ((RubyObject) this.vagrantEnvironment
+					.callMethod("root_path")).toString();
 		} catch (RaiseException exception) {
 			throw new VagrantException(exception);
 		}
@@ -151,7 +148,7 @@ public class VagrantEnvironment {
 	 */
 	public Iterable<String> getAllAvailableBoxes() {
 		try {
-			RubyArray boxes = (RubyArray) ((RubyObject) vagrantEnvironment
+			RubyArray boxes = (RubyArray) ((RubyObject) this.vagrantEnvironment
 					.callMethod("boxes")).getInternalVariable("@boxes");
 			ArrayList<String> ret = new ArrayList<String>();
 			for (Object box : boxes) {
@@ -170,7 +167,7 @@ public class VagrantEnvironment {
 	 */
 	public Iterable<VagrantVm> getAllVms() {
 		try {
-			RubyArray o = (RubyArray) vagrantEnvironment
+			RubyArray o = (RubyArray) this.vagrantEnvironment
 					.callMethod("vms_ordered");
 			ArrayList<VagrantVm> vms = new ArrayList<VagrantVm>();
 			for (Object vm : o) {
@@ -191,7 +188,7 @@ public class VagrantEnvironment {
 	 */
 	public VagrantVm getVm(int index) {
 		try {
-			RubyArray o = (RubyArray) vagrantEnvironment
+			RubyArray o = (RubyArray) this.vagrantEnvironment
 					.callMethod("vms_ordered");
 			return new VagrantVm((RubyObject) o.get(index));
 		} catch (RaiseException exception) {
@@ -206,7 +203,7 @@ public class VagrantEnvironment {
 	 */
 	public int getVmCount() {
 		try {
-			RubyArray o = (RubyArray) vagrantEnvironment
+			RubyArray o = (RubyArray) this.vagrantEnvironment
 					.callMethod("vms_ordered");
 			return o.size();
 		} catch (RaiseException exception) {
@@ -222,7 +219,7 @@ public class VagrantEnvironment {
 	 */
 	public String getVagrantfileName() {
 		try {
-			return ((RubyObject) vagrantEnvironment
+			return ((RubyObject) this.vagrantEnvironment
 					.callMethod("vagrantfile_name")).toString();
 		} catch (RaiseException exception) {
 			throw new VagrantException(exception);
@@ -237,8 +234,8 @@ public class VagrantEnvironment {
 	 */
 	public String getHomePath() {
 		try {
-			return ((RubyObject) vagrantEnvironment.callMethod("home_path"))
-					.toString();
+			return ((RubyObject) this.vagrantEnvironment
+					.callMethod("home_path")).toString();
 		} catch (RaiseException exception) {
 			throw new VagrantException(exception);
 		}
@@ -252,7 +249,7 @@ public class VagrantEnvironment {
 	 */
 	public VagrantVm getPrimaryVm() {
 		try {
-			RubyObject rubyVm = (RubyObject) vagrantEnvironment
+			RubyObject rubyVm = (RubyObject) this.vagrantEnvironment
 					.callMethod("primary_vm");
 			if (rubyVm == null || rubyVm instanceof RubyNil) {
 				throw new VagrantException(

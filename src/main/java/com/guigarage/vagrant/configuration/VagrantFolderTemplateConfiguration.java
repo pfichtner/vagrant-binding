@@ -11,6 +11,8 @@ import lombok.experimental.Accessors;
 @Getter
 public class VagrantFolderTemplateConfiguration {
 
+	// TODO PF Split into two classes
+
 	// TODO: Das kopieren der Dateien sollte in eine Methode in dieser Klasse
 	// augelagert werden die das VagrantEnvironment als Übergabeparameter
 	// bekommt.
@@ -43,7 +45,7 @@ public class VagrantFolderTemplateConfiguration {
 	}
 
 	public boolean useUriTemplate() {
-		return uriTemplate != null;
+		return this.uriTemplate != null;
 	}
 
 	@NoArgsConstructor(staticName = "create")
@@ -58,20 +60,20 @@ public class VagrantFolderTemplateConfiguration {
 		private URI withUrlTemplate;
 
 		public VagrantFolderTemplateConfiguration build() {
-			if (withLocalFolder == null && withUrlTemplate == null) {
+			if (this.withLocalFolder == null && this.withUrlTemplate == null) {
 				throw new VagrantBuilderException(
 						"localFolder or uriTemplate need to be specified");
 			}
-			if (withPathInVagrantFolder == null) {
+			if (this.withPathInVagrantFolder == null) {
 				throw new VagrantBuilderException(
 						"pathInVagrantFolder need to be specified");
 			}
-			if (withLocalFolder != null) {
-				return new VagrantFolderTemplateConfiguration(withLocalFolder,
-						withPathInVagrantFolder);
+			if (this.withLocalFolder != null) {
+				return new VagrantFolderTemplateConfiguration(
+						this.withLocalFolder, this.withPathInVagrantFolder);
 			} else {
-				return new VagrantFolderTemplateConfiguration(withUrlTemplate,
-						withPathInVagrantFolder);
+				return new VagrantFolderTemplateConfiguration(
+						this.withUrlTemplate, this.withPathInVagrantFolder);
 			}
 		}
 

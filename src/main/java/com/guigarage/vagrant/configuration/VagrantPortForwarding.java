@@ -13,7 +13,6 @@ import lombok.experimental.Accessors;
  * @author Peter Fichtner
  */
 @Getter
-@RequiredArgsConstructor
 public class VagrantPortForwarding {
 
 	private final String name;
@@ -21,6 +20,12 @@ public class VagrantPortForwarding {
 	private final int guestPort;
 
 	private final int hostPort;
+
+	private VagrantPortForwarding(Builder builder) {
+		this.name = builder.withName;
+		this.guestPort = builder.withGuestPort;
+		this.hostPort = builder.withHostPort;
+	}
 
 	@NoArgsConstructor(staticName = "create")
 	@Accessors(fluent = true, chain = true)
@@ -34,14 +39,13 @@ public class VagrantPortForwarding {
 		private String withName;
 
 		public VagrantPortForwarding build() {
-			if (withGuestPort < 0) {
+			if (this.withGuestPort < 0) {
 				throw new VagrantBuilderException("no guestport defined");
 			}
-			if (withHostPort < 0) {
+			if (this.withHostPort < 0) {
 				throw new VagrantBuilderException("no hostport defined");
 			}
-			return new VagrantPortForwarding(withName, withGuestPort,
-					withHostPort);
+			return new VagrantPortForwarding(this);
 		}
 
 	}

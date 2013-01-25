@@ -2,10 +2,8 @@ package com.guigarage.vagrant.configuration;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
 
 /**
  * Configuration for a puppet provisioner that is used by Vagrant to configure a
@@ -14,7 +12,6 @@ import lombok.experimental.Accessors;
  * @author hendrikebbers
  * @author Peter Fichtner
  */
-@RequiredArgsConstructor
 @Getter
 public class PuppetProvisionerConfig {
 
@@ -25,6 +22,13 @@ public class PuppetProvisionerConfig {
 	private final String manifestFile;
 
 	private final String modulesPath;
+
+	private PuppetProvisionerConfig(Builder builder) {
+		this.debug = builder.withDebug;
+		this.manifestsPath = builder.withManifestPath;
+		this.manifestFile = builder.withManifestFile;
+		this.modulesPath = builder.withModulesPath;
+	}
 
 	/**
 	 * Builder for {@link PuppetProvisionerConfig}
@@ -46,14 +50,13 @@ public class PuppetProvisionerConfig {
 		private String withModulesPath;
 
 		public PuppetProvisionerConfig build() {
-			if (withManifestPath == null) {
+			if (this.withManifestPath == null) {
 				throw new VagrantBuilderException("no manifestPath defined!");
 			}
-			if (withManifestFile == null) {
+			if (this.withManifestFile == null) {
 				throw new VagrantBuilderException("no manifestFile defined!");
 			}
-			return new PuppetProvisionerConfig(withDebug, withManifestPath,
-					withManifestFile, withModulesPath);
+			return new PuppetProvisionerConfig(this);
 		}
 
 	}

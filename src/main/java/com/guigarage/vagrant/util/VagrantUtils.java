@@ -61,7 +61,7 @@ public final class VagrantUtils {
 	}
 
 	/**
-	 * Returns a basic Vagrantfile that uses the lucid64 box as template
+	 * Returns a basic Vagrantfile that uses the lucid64 box as template.
 	 * 
 	 * @return the content of the Vagrantfile as String
 	 */
@@ -76,7 +76,7 @@ public final class VagrantUtils {
 
 	/**
 	 * Returns the default URL for the lucid32 box. The box is hosted at
-	 * vagrantup.com
+	 * vagrantup.com.
 	 * 
 	 * @return The URL for the box
 	 */
@@ -90,7 +90,7 @@ public final class VagrantUtils {
 
 	/**
 	 * Returns the default URL for the lucid64 box. The box is hosted at
-	 * vagrantup.com
+	 * vagrantup.com.
 	 * 
 	 * @return The URL for the box
 	 */

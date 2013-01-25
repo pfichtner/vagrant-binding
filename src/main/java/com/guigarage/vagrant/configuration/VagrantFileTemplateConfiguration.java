@@ -59,6 +59,11 @@ public class VagrantFileTemplateConfiguration {
 		this.pathInVagrantFolder = pathInVagrantFolder;
 	}
 
+	private VagrantFileTemplateConfiguration(Builder builder) {
+		this.urlTemplate = builder.withUrlTemplate;
+		this.pathInVagrantFolder = builder.withPathInVagrantFolder;
+	}
+
 	/**
 	 * You can use a locale path or a URL to define the local file. So you can
 	 * also use any data / file from the internet or the classpath. This returns
@@ -67,7 +72,7 @@ public class VagrantFileTemplateConfiguration {
 	 * @return true if a URL is used for the local file
 	 */
 	public boolean useUrlTemplate() {
-		return urlTemplate != null;
+		return this.urlTemplate != null;
 	}
 
 	/**
@@ -78,7 +83,7 @@ public class VagrantFileTemplateConfiguration {
 	 * @return true if a path is used for the local file
 	 */
 	public boolean useLocalFile() {
-		return localFile != null;
+		return this.localFile != null;
 	}
 
 	@NoArgsConstructor(staticName = "create")
@@ -94,12 +99,11 @@ public class VagrantFileTemplateConfiguration {
 		private String withPathInVagrantFolder;
 
 		public VagrantFileTemplateConfiguration build() {
-			if (withLocalFile != null) {
-				return new VagrantFileTemplateConfiguration(withLocalFile,
-						withPathInVagrantFolder);
+			if (this.withLocalFile != null) {
+				return new VagrantFileTemplateConfiguration(this.withLocalFile,
+						this.withPathInVagrantFolder);
 			} else {
-				return new VagrantFileTemplateConfiguration(withUrlTemplate,
-						withPathInVagrantFolder);
+				return new VagrantFileTemplateConfiguration(this);
 			}
 		}
 	}

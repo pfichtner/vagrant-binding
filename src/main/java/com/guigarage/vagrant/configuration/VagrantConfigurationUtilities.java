@@ -3,6 +3,9 @@ package com.guigarage.vagrant.configuration;
 import java.net.URL;
 import java.util.UUID;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 /**
  * Some utilities for the configuration of Vagrant environments. This class
  * creates configurationfiles for Vagrant.
@@ -10,10 +13,8 @@ import java.util.UUID;
  * @author hendrikebbers
  * 
  */
-public class VagrantConfigurationUtilities {
-
-	private VagrantConfigurationUtilities() {
-	}
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class VagrantConfigurationUtilities {
 
 	public static String createVagrantFileContent(
 			VagrantEnvironmentConfig config) {
@@ -53,7 +54,7 @@ public class VagrantConfigurationUtilities {
 			builder.append(createBoxUrlConfig(vmName + "_config", boxUrl));
 		}
 
-		String ip = vmConfig.getIp();
+		String ip = vmConfig.getHostOnlyIp();
 		if (ip != null) {
 			builder.append(createHostOnlyIpConfig(vmName + "_config", ip));
 		}

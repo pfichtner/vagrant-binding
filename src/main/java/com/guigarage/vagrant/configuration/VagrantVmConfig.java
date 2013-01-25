@@ -20,13 +20,13 @@ import com.guigarage.vagrant.util.VagrantUtils;
 @Getter
 public class VagrantVmConfig {
 
-	private List<VagrantPortForwarding> portForwardings;
+	private List<VagrantPortForwarding> portForwardings = new ArrayList<VagrantPortForwarding>();
 
 	private PuppetProvisionerConfig puppetProvisionerConfig;
 
 	private String name;
 
-	private String ip;
+	private String hostOnlyIp;
 
 	private String boxName;
 
@@ -61,19 +61,30 @@ public class VagrantVmConfig {
 			String boxName, URL boxUrl,
 			Iterable<VagrantPortForwarding> portForwardings,
 			PuppetProvisionerConfig puppetProvisionerConfig, boolean guiMode) {
-		this.portForwardings = new ArrayList<VagrantPortForwarding>();
 		if (portForwardings != null) {
 			for (VagrantPortForwarding portForwarding : portForwardings) {
 				this.portForwardings.add(portForwarding);
 			}
 		}
 		this.puppetProvisionerConfig = puppetProvisionerConfig;
-		this.ip = ip;
+		this.hostOnlyIp = ip;
 		this.name = name;
 		this.boxName = boxName;
 		this.boxUrl = boxUrl;
 		this.hostName = hostName;
 		this.guiMode = guiMode;
+	}
+
+	private VagrantVmConfig(Builder builder) {
+		this.name = builder.withName;
+		this.hostOnlyIp = builder.withHostOnlyIp;
+		this.hostName = builder.withHostName;
+		this.boxName = builder.withBoxName;
+		this.boxUrl = builder.withBoxUrl;
+		this.portForwardings = new ArrayList<VagrantPortForwarding>(
+				builder.vagrantPortForwarding);
+		this.puppetProvisionerConfig = builder.withPuppetProvisionerConfig;
+		this.guiMode = builder.withGuiMode;
 	}
 
 	@NoArgsConstructor(staticName = "create")
@@ -118,12 +129,10 @@ public class VagrantVmConfig {
 		}
 
 		public VagrantVmConfig build() {
-			if (withBoxName == null) {
+			if (this.withBoxName == null) {
 				throw new VagrantBuilderException("No boxName defined");
 			}
-			return new VagrantVmConfig(withName, withHostOnlyIp, withHostName,
-					withBoxName, withBoxUrl, vagrantPortForwarding,
-					withPuppetProvisionerConfig, withGuiMode);
+			return new VagrantVmConfig(this);
 		}
 
 	}

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-
 /**
  * Global configuration for a Vagrant environment that uses
  * {@link VagrantFileTemplateConfiguration} for a Vagrant environment
@@ -19,25 +18,29 @@ import lombok.experimental.Accessors;
 @Getter
 public class VagrantConfiguration {
 
-	private VagrantEnvironmentConfig environmentConfig;
+	private final VagrantEnvironmentConfig environmentConfig;
 
-	private List<VagrantFileTemplateConfiguration> fileTemplateConfigurations;
+	private final List<VagrantFileTemplateConfiguration> fileTemplateConfigurations = new ArrayList<VagrantFileTemplateConfiguration>();
 
-	private List<VagrantFolderTemplateConfiguration> folderTemplateConfigurations;
+	private final List<VagrantFolderTemplateConfiguration> folderTemplateConfigurations = new ArrayList<VagrantFolderTemplateConfiguration>();
 
 	public VagrantConfiguration(
 			VagrantEnvironmentConfig environmentConfig,
 			Iterable<VagrantFileTemplateConfiguration> fileTemplateConfigurations,
 			Iterable<VagrantFolderTemplateConfiguration> folderTemplateConfigurations) {
 		this.environmentConfig = environmentConfig;
-		this.fileTemplateConfigurations = new ArrayList<VagrantFileTemplateConfiguration>();
 		for (VagrantFileTemplateConfiguration fileTemplateConfiguration : fileTemplateConfigurations) {
 			this.fileTemplateConfigurations.add(fileTemplateConfiguration);
 		}
-		this.folderTemplateConfigurations = new ArrayList<VagrantFolderTemplateConfiguration>();
 		for (VagrantFolderTemplateConfiguration folderTemplateConfiguration : folderTemplateConfigurations) {
 			this.folderTemplateConfigurations.add(folderTemplateConfiguration);
 		}
+	}
+
+	private VagrantConfiguration(Builder builder) {
+		this(builder.withVagrantEnvironmentConfig,
+				builder.fileTemplateConfigurations,
+				builder.folderTemplateConfigurations);
 	}
 
 	@NoArgsConstructor(staticName = "create")
@@ -64,12 +67,11 @@ public class VagrantConfiguration {
 		}
 
 		public VagrantConfiguration build() {
-			if (withVagrantEnvironmentConfig == null) {
+			if (this.withVagrantEnvironmentConfig == null) {
 				throw new VagrantBuilderException(
 						"No VagrantEnvironmentConfig defined");
 			}
-			return new VagrantConfiguration(withVagrantEnvironmentConfig,
-					fileTemplateConfigurations, folderTemplateConfigurations);
+			return new VagrantConfiguration(this);
 		}
 
 	}

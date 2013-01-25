@@ -4,7 +4,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * Default Exception for the vagrant-binding. Any Exception in Ruby / Vagrant is
- * wrapped in a VagrantException
+ * wrapped in a VagrantException. 
  * 
  * @author hendrikebbers
  * @author Peter Fichtner

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class VagrantEnvironmentConfig {
 
-	private List<VagrantVmConfig> vmConfigs;
+	private final List<VagrantVmConfig> vmConfigs;
 
 	public VagrantEnvironmentConfig(Iterable<VagrantVmConfig> vmConfigs) {
 		this.vmConfigs = new ArrayList<VagrantVmConfig>();
@@ -26,6 +26,10 @@ public class VagrantEnvironmentConfig {
 		}
 	}
 
+	private VagrantEnvironmentConfig(Builder builder) {
+		this.vmConfigs = new ArrayList<VagrantVmConfig>(builder.vmConfigs);
+	}
+
 	/**
 	 * Returns true if this configuration describes a multi VM environment. A
 	 * multi VM environment manages more than one VM.
@@ -34,7 +38,7 @@ public class VagrantEnvironmentConfig {
 	 *         environment
 	 */
 	public boolean isMultiVmEnvironment() {
-		return vmConfigs.size() > 1;
+		return this.vmConfigs.size() > 1;
 	}
 
 	@NoArgsConstructor(staticName = "create")
@@ -42,20 +46,17 @@ public class VagrantEnvironmentConfig {
 
 		private List<VagrantVmConfig> vmConfigs = new ArrayList<VagrantVmConfig>();
 
-		public Builder withVagrantVmConfig(
-				VagrantVmConfig vmConfig) {
+		public Builder withVagrantVmConfig(VagrantVmConfig vmConfig) {
 			this.vmConfigs.add(vmConfig);
 			return this;
 		}
 
 		public VagrantEnvironmentConfig build() {
-			if (vmConfigs.isEmpty()) {
+			if (this.vmConfigs.isEmpty()) {
 				throw new VagrantBuilderException("No vm defined");
 			}
-			return new VagrantEnvironmentConfig(new ArrayList<VagrantVmConfig>(
-					this.vmConfigs));
+			return new VagrantEnvironmentConfig(this);
 		}
-
 	}
 
 }

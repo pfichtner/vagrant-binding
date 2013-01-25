@@ -15,7 +15,8 @@ public class RuleTest {
 
 	@Test
 	public void testDummy() {
-		assertEquals(true, testRule.getEnvironment().getAllVms().iterator()
-				.next().isRunning());
+		assertEquals(true, this.testRule.getEnvironment().getAllVms()
+				.iterator().next().isRunning());
 	}
+
 }
