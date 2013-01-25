@@ -9,9 +9,8 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import com.guigarage.vagrant.configuration.VagrantEnvironmentConfig;
+import com.guigarage.vagrant.configuration.VagrantEnvironmentConfig.Builder;
 import com.guigarage.vagrant.configuration.VagrantVmConfig;
-import com.guigarage.vagrant.configuration.builder.VagrantEnvironmentConfigBuilder;
-import com.guigarage.vagrant.configuration.builder.VagrantVmConfigBuilder;
 import com.guigarage.vagrant.model.VagrantEnvironment;
 import com.guigarage.vagrant.util.VagrantUtils;
 
@@ -23,12 +22,12 @@ public class NewBoxUsage {
 
 		Vagrant vagrant = new Vagrant(true);
 		File vagrantTempDir = VagrantTestUtils.createTempDir();
-		VagrantVmConfig vmConfig = VagrantVmConfigBuilder.create()
+		VagrantVmConfig vmConfig = VagrantVmConfig.Builder.create()
 				.withBoxName(boxName)
 				.withBoxUrl(VagrantUtils.getInstance().getLucid32Url())
 				.withName("UniTestVm").build();
-		VagrantEnvironmentConfig envConfig = VagrantEnvironmentConfigBuilder
-				.create().withVagrantVmConfig(vmConfig).build();
+		VagrantEnvironmentConfig envConfig = Builder.create()
+				.withVagrantVmConfig(vmConfig).build();
 
 		VagrantEnvironment environment = null;
 

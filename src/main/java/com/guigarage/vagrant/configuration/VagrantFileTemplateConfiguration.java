@@ -4,6 +4,9 @@ import java.io.File;
 import java.net.URL;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /**
  * A configuration for a Vagrant file template. The local file defined by this
@@ -76,6 +79,29 @@ public class VagrantFileTemplateConfiguration {
 	 */
 	public boolean useLocalFile() {
 		return localFile != null;
+	}
+
+	@NoArgsConstructor(staticName = "create")
+	@Accessors(fluent = true, chain = true)
+	@Setter
+	// TODO PF split into to classes
+	public static class Builder {
+
+		private File localFile;
+
+		private URL urlTemplate;
+
+		private String pathInVagrantFolder;
+
+		public VagrantFileTemplateConfiguration build() {
+			if (localFile != null) {
+				return new VagrantFileTemplateConfiguration(localFile,
+						pathInVagrantFolder);
+			} else {
+				return new VagrantFileTemplateConfiguration(urlTemplate,
+						pathInVagrantFolder);
+			}
+		}
 	}
 
 }

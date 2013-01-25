@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 
 /**
  * Global configuration for a Vagrant environment that uses
@@ -34,6 +38,40 @@ public class VagrantConfiguration {
 		for (VagrantFolderTemplateConfiguration folderTemplateConfiguration : folderTemplateConfigurations) {
 			this.folderTemplateConfigurations.add(folderTemplateConfiguration);
 		}
+	}
+
+	@NoArgsConstructor(staticName = "create")
+	@Accessors(fluent = true, chain = true)
+	@Setter
+	public static class Builder {
+
+		private VagrantEnvironmentConfig withVagrantEnvironmentConfig;
+
+		private List<VagrantFileTemplateConfiguration> fileTemplateConfigurations = new ArrayList<VagrantFileTemplateConfiguration>();
+
+		private List<VagrantFolderTemplateConfiguration> folderTemplateConfigurations = new ArrayList<VagrantFolderTemplateConfiguration>();
+
+		public Builder withVagrantFileTemplateConfiguration(
+				VagrantFileTemplateConfiguration fileTemplateConfiguration) {
+			this.fileTemplateConfigurations.add(fileTemplateConfiguration);
+			return this;
+		}
+
+		public Builder withVagrantFolderTemplateConfiguration(
+				VagrantFolderTemplateConfiguration folderTemplateConfiguration) {
+			this.folderTemplateConfigurations.add(folderTemplateConfiguration);
+			return this;
+		}
+
+		public VagrantConfiguration build() {
+			if (withVagrantEnvironmentConfig == null) {
+				throw new VagrantBuilderException(
+						"No VagrantEnvironmentConfig defined");
+			}
+			return new VagrantConfiguration(withVagrantEnvironmentConfig,
+					fileTemplateConfigurations, folderTemplateConfigurations);
+		}
+
 	}
 
 }

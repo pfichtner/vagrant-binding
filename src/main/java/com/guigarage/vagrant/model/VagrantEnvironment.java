@@ -12,7 +12,6 @@ import org.jruby.RubyObject;
 import org.jruby.RubyString;
 import org.jruby.exceptions.RaiseException;
 
-import com.guigarage.vagrant.Vagrant;
 import com.guigarage.vagrant.util.VagrantException;
 
 /**

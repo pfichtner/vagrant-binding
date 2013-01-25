@@ -1,4 +1,4 @@
-package com.guigarage.vagrant.configuration.builder.util;
+package com.guigarage.vagrant.configuration;
 
 import lombok.NoArgsConstructor;
 

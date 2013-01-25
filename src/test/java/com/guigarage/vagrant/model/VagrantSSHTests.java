@@ -11,9 +11,8 @@ import org.junit.Test;
 import com.guigarage.vagrant.Vagrant;
 import com.guigarage.vagrant.VagrantTestUtils;
 import com.guigarage.vagrant.configuration.VagrantEnvironmentConfig;
+import com.guigarage.vagrant.configuration.VagrantEnvironmentConfig.Builder;
 import com.guigarage.vagrant.configuration.VagrantVmConfig;
-import com.guigarage.vagrant.configuration.builder.VagrantEnvironmentConfigBuilder;
-import com.guigarage.vagrant.configuration.builder.VagrantVmConfigBuilder;
 
 public class VagrantSSHTests {
 
@@ -21,10 +20,10 @@ public class VagrantSSHTests {
 	public void testSSHExecute() throws IOException {
 		Vagrant vagrant = new Vagrant(true);
 		File vagrantTempDir = VagrantTestUtils.createTempDir();
-		VagrantVmConfig vmConfig = VagrantVmConfigBuilder.create()
+		VagrantVmConfig vmConfig = VagrantVmConfig.Builder.create()
 				.withLucid32Box().withName("UniTestVm").build();
-		VagrantEnvironmentConfig envConfig = VagrantEnvironmentConfigBuilder
-				.create().withVagrantVmConfig(vmConfig).build();
+		VagrantEnvironmentConfig envConfig = Builder.create()
+				.withVagrantVmConfig(vmConfig).build();
 
 		VagrantEnvironment environment = null;
 
@@ -58,10 +57,10 @@ public class VagrantSSHTests {
 	public void testSSHUpload() throws IOException {
 		Vagrant vagrant = new Vagrant(true);
 		File vagrantTempDir = VagrantTestUtils.createTempDir();
-		VagrantVmConfig vmConfig = VagrantVmConfigBuilder.create()
+		VagrantVmConfig vmConfig = VagrantVmConfig.Builder.create()
 				.withLucid32Box().withName("UniTestVm").build();
-		VagrantEnvironmentConfig envConfig = VagrantEnvironmentConfigBuilder
-				.create().withVagrantVmConfig(vmConfig).build();
+		VagrantEnvironmentConfig envConfig = Builder.create()
+				.withVagrantVmConfig(vmConfig).build();
 
 		VagrantEnvironment environment = null;
 

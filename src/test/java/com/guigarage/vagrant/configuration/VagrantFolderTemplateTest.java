@@ -1,67 +1,55 @@
 package com.guigarage.vagrant.configuration;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.guigarage.vagrant.Vagrant;
-import com.guigarage.vagrant.configuration.builder.VagrantConfigurationBuilder;
-import com.guigarage.vagrant.configuration.builder.VagrantEnvironmentConfigBuilder;
-import com.guigarage.vagrant.configuration.builder.VagrantFolderTemplateConfigurationBuilder;
-import com.guigarage.vagrant.configuration.builder.VagrantVmConfigBuilder;
+import com.guigarage.vagrant.configuration.VagrantConfiguration.Builder;
 import com.guigarage.vagrant.model.VagrantEnvironment;
 
 public class VagrantFolderTemplateTest {
 
+	// TODO PF Could use @Rule WithTempFile
+
 	@Test
-	public void testFolderTemplates() {
+	public void testFolderTemplates() throws IOException {
 		File localeFolder = new File(FileUtils.getTempDirectory(), UUID
 				.randomUUID().toString());
 		File vagrantPath = new File(FileUtils.getTempDirectory(), UUID
 				.randomUUID().toString());
 		try {
 			localeFolder.mkdirs();
-			File testFile = new File(localeFolder, "file.tmp");
-			try {
-				testFile.createNewFile();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				Assert.fail(e1.getMessage());
-			}
+			new File(localeFolder, "file.tmp").createNewFile();
 
-			VagrantFolderTemplateConfiguration folderTemplateConfiguration = VagrantFolderTemplateConfigurationBuilder
+			VagrantFolderTemplateConfiguration folderTemplateConfiguration = VagrantFolderTemplateConfiguration.Builder
 					.create().withPathInVagrantFolder("testFolder")
 					.withLocalFolder(localeFolder).build();
-			VagrantVmConfig vmConfig = VagrantVmConfigBuilder.create()
+			VagrantVmConfig vmConfig = VagrantVmConfig.Builder.create()
 					.withLucid32Box().build();
-			VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfigBuilder
+			VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfig.Builder
 					.create().withVagrantVmConfig(vmConfig).build();
-			VagrantConfiguration vagrantConfiguration = VagrantConfigurationBuilder
+			VagrantConfiguration vagrantConfiguration = Builder
 					.create()
 					.withVagrantEnvironmentConfig(environmentConfig)
 					.withVagrantFolderTemplateConfiguration(
 							folderTemplateConfiguration).build();
 
 			Vagrant vagrant = new Vagrant(true);
-			VagrantEnvironment environment = null;
-			try {
-				environment = vagrant.createEnvironment(vagrantPath,
-						vagrantConfiguration);
-				File vagrantFolder = new File(environment.getRootPath());
-				File createdFolder = new File(vagrantFolder, "testFolder");
-				Assert.assertEquals(true, createdFolder.exists());
-				Assert.assertEquals(true, createdFolder.isDirectory());
-				File createdFile = new File(createdFolder, "file.tmp");
-				Assert.assertEquals(true, createdFile.exists());
-				Assert.assertEquals(true, createdFile.isFile());
-			} catch (IOException e) {
-				e.printStackTrace();
-				Assert.fail(e.getMessage());
-			}
+			VagrantEnvironment environment = vagrant.createEnvironment(
+					vagrantPath, vagrantConfiguration);
+			File vagrantFolder = new File(environment.getRootPath());
+			File createdFolder = new File(vagrantFolder, "testFolder");
+			assertEquals(true, createdFolder.exists());
+			assertEquals(true, createdFolder.isDirectory());
+			File createdFile = new File(createdFolder, "file.tmp");
+			assertEquals(true, createdFile.exists());
+			assertEquals(true, createdFile.isFile());
 		} finally {
 			FileUtils.deleteQuietly(localeFolder);
 			FileUtils.deleteQuietly(vagrantPath);
@@ -69,29 +57,23 @@ public class VagrantFolderTemplateTest {
 	}
 
 	@Test
-	public void testFolderUriTemplates() {
+	public void testFolderUriTemplates() throws IOException {
 		File localeFolder = new File(FileUtils.getTempDirectory(), UUID
 				.randomUUID().toString());
 		File vagrantPath = new File(FileUtils.getTempDirectory(), UUID
 				.randomUUID().toString());
 		try {
 			localeFolder.mkdirs();
-			File testFile = new File(localeFolder, "file.tmp");
-			try {
-				testFile.createNewFile();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				Assert.fail(e1.getMessage());
-			}
+			new File(localeFolder, "file.tmp").createNewFile();
 
-			VagrantFolderTemplateConfiguration folderTemplateConfiguration = VagrantFolderTemplateConfigurationBuilder
+			VagrantFolderTemplateConfiguration folderTemplateConfiguration = VagrantFolderTemplateConfiguration.Builder
 					.create().withPathInVagrantFolder("testFolder")
 					.withUrlTemplate(localeFolder.toURI()).build();
-			VagrantVmConfig vmConfig = VagrantVmConfigBuilder.create()
+			VagrantVmConfig vmConfig = VagrantVmConfig.Builder.create()
 					.withLucid32Box().build();
-			VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfigBuilder
-					.create().withVagrantVmConfig(vmConfig).build();
-			VagrantConfiguration vagrantConfiguration = VagrantConfigurationBuilder
+			VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfig.Builder.create()
+					.withVagrantVmConfig(vmConfig).build();
+			VagrantConfiguration vagrantConfiguration = Builder
 					.create()
 					.withVagrantEnvironmentConfig(environmentConfig)
 					.withVagrantFolderTemplateConfiguration(
@@ -99,61 +81,44 @@ public class VagrantFolderTemplateTest {
 
 			Vagrant vagrant = new Vagrant(true);
 			VagrantEnvironment environment = null;
-			try {
-				environment = vagrant.createEnvironment(vagrantPath,
-						vagrantConfiguration);
-				File vagrantFolder = new File(environment.getRootPath());
-				File createdFolder = new File(vagrantFolder, "testFolder");
-				Assert.assertEquals(true, createdFolder.exists());
-				Assert.assertEquals(true, createdFolder.isDirectory());
-				File createdFile = new File(createdFolder, "file.tmp");
-				Assert.assertEquals(true, createdFile.exists());
-				Assert.assertEquals(true, createdFile.isFile());
-			} catch (IOException e) {
-				e.printStackTrace();
-				Assert.fail(e.getMessage());
-			}
+			environment = vagrant.createEnvironment(vagrantPath,
+					vagrantConfiguration);
+			File vagrantFolder = new File(environment.getRootPath());
+			File createdFolder = new File(vagrantFolder, "testFolder");
+			assertEquals(true, createdFolder.exists());
+			assertEquals(true, createdFolder.isDirectory());
+			File createdFile = new File(createdFolder, "file.tmp");
+			assertEquals(true, createdFile.exists());
+			assertEquals(true, createdFile.isFile());
 		} finally {
 			FileUtils.deleteQuietly(localeFolder);
 			FileUtils.deleteQuietly(vagrantPath);
 		}
 	}
-	
+
 	@Test
-	public void testWithoutFolderTemplates() {
+	public void testWithoutFolderTemplates() throws IOException {
 		File vagrantPath = new File(FileUtils.getTempDirectory(), UUID
 				.randomUUID().toString());
 		try {
-			VagrantVmConfig vmConfig = VagrantVmConfigBuilder.create()
-					.withLucid32Box().build();
-			VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfigBuilder
-					.create().withVagrantVmConfig(vmConfig).build();
-			VagrantConfiguration vagrantConfiguration = VagrantConfigurationBuilder
-					.create()
-					.withVagrantEnvironmentConfig(environmentConfig)
+			VagrantVmConfig vmConfig = VagrantVmConfig.Builder.create().withLucid32Box()
 					.build();
+			VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfig.Builder.create()
+					.withVagrantVmConfig(vmConfig).build();
+			VagrantConfiguration vagrantConfiguration = Builder.create()
+					.withVagrantEnvironmentConfig(environmentConfig).build();
 
-			Vagrant vagrant = new Vagrant(true);
-			try {
-				vagrant.createEnvironment(vagrantPath,
-						vagrantConfiguration);
-			} catch (IOException e) {
-				e.printStackTrace();
-				Assert.fail(e.getMessage());
-			}
+			new Vagrant(true).createEnvironment(vagrantPath,
+					vagrantConfiguration);
 		} finally {
 			FileUtils.deleteQuietly(vagrantPath);
 		}
 	}
-	
-	@Test
+
+	@Test(expected = VagrantBuilderException.class)
 	public void testBuilderWithoutFolderTemplates() {
-		try {
-			VagrantFolderTemplateConfigurationBuilder
-					.create().withPathInVagrantFolder("testFolder")
-					.withLocalFolder((File)null).build();
-			Assert.fail();
-		} catch (Exception e) {
-		}
+		VagrantFolderTemplateConfiguration.Builder.create().withPathInVagrantFolder("testFolder")
+				.withLocalFolder((File) null).build();
 	}
+
 }

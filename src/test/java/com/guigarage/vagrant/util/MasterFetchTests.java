@@ -1,8 +1,8 @@
 package com.guigarage.vagrant.util;
 
-import org.junit.Test;
-
 import junit.framework.Assert;
+
+import org.junit.Test;
 
 public class MasterFetchTests {
 

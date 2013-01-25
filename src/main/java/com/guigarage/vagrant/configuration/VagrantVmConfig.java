@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
+import com.guigarage.vagrant.util.VagrantUtils;
 
 /**
  * A configuration class that can be used to define and create a VM in Vagrant.
@@ -70,5 +75,50 @@ public class VagrantVmConfig {
 		this.hostName = hostName;
 		this.guiMode = guiMode;
 	}
+	
+	@NoArgsConstructor(staticName = "create")
+	@Accessors(fluent = true, chain = true)
+	@Setter
+	public static class Builder {
+
+		private List<VagrantPortForwarding> withPortForwardings = new ArrayList<VagrantPortForwarding>();
+
+		private PuppetProvisionerConfig withPuppetProvisionerConfig;
+
+		private String withName;
+
+		private String withIp;
+
+		private String withBoxName;
+
+		private URL withBoxUrl;
+
+		private String withHostName;
+
+		private boolean withGuiMode;
+
+		public Builder withLucid32Box() {
+			return withBox("lucid32", VagrantUtils.getInstance().getLucid32Url());
+		}
+
+		public Builder withLucid64Box() {
+			return withBox("lucid64", VagrantUtils.getInstance().getLucid64Url());
+		}
+
+		private Builder withBox(String name, URL url) {
+			return withBoxName(name).withBoxUrl(url);
+		}
+
+		public VagrantVmConfig build() {
+			if (withBoxName == null) {
+				throw new VagrantBuilderException("No boxName defined");
+			}
+			return new VagrantVmConfig(withName, withIp, withHostName, withBoxName,
+					withBoxUrl, withPortForwardings, withPuppetProvisionerConfig,
+					withGuiMode);
+		}
+
+	}
+
 
 }
