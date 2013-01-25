@@ -57,13 +57,13 @@ Each vm has a lifecycle. You can change the state of the lifecycle easily:
 To configure the software, which will be installed on the virtual machine you need a Puppet configuration script. <a title="Puppet" href="http://puppetlabs.com">Puppet</a> is a tool that automates the installation and administration of software. Each virtual machine that is created by Vagrant runs Puppet by default. So you only need a configuration script. Here is a simple example that edits the welcome message of a virtual machine:
 
     group { "puppet":
-        ensure =&gt; "present",
+        ensure => "present",
     }
 
-    File { owner =&gt; 0, group =&gt; 0, mode =&gt; 0644 }
+    File { owner => 0, group => 0, mode => 0644 }
     
     file { '/etc/motd':
-        content =&gt; "Welcome to your Vagrant-built virtual machine!
+        content => "Welcome to your Vagrant-built virtual machine!
         Managed by Puppet.\n"
     }
 
@@ -102,7 +102,7 @@ Vagrant-Binding offers a special <a title="JUnit Rule" href="http://www.junit.or
         statement.executeUpdate(table);
         statement.close();
 
-        for(int i=0; i &lt; 100; i++) {
+        for(int i=0; i < 100; i++) {
             statement = connection.createStatement();
             statement.executeUpdate("INSERT INTO mytable VALUES(\"" + UUID.randomUUID().toString() + "\")");
             statement.close();
