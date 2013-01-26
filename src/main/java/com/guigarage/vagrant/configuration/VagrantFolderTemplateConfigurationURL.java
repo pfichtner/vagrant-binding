@@ -1,6 +1,6 @@
 package com.guigarage.vagrant.configuration;
 
-import static com.guigarage.vagrant.configuration.Preconditions.checkState;
+import static com.guigarage.vagrant.util.Preconditions.checkState;
 
 import java.io.File;
 import java.io.IOException;

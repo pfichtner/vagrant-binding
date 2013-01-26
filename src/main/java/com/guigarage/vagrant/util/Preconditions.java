@@ -1,4 +1,4 @@
-package com.guigarage.vagrant.configuration;
+package com.guigarage.vagrant.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

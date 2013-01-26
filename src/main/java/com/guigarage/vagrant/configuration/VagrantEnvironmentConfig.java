@@ -5,7 +5,7 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import static com.guigarage.vagrant.configuration.Preconditions.*;
+import static com.guigarage.vagrant.util.Preconditions.*;
 
 /**
  * Holds the configuration of a Vagrant environment.

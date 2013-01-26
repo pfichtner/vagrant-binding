@@ -2,10 +2,7 @@ package com.guigarage.vagrant.junit;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.UUID;
-
-import lombok.Cleanup;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
@@ -16,7 +13,6 @@ import com.guigarage.vagrant.Vagrant;
 import com.guigarage.vagrant.configuration.VagrantConfiguration;
 import com.guigarage.vagrant.configuration.VagrantConfigurationUtilities;
 import com.guigarage.vagrant.configuration.VagrantEnvironmentConfig;
-import com.guigarage.vagrant.configuration.VagrantFileTemplateConfiguration;
 import com.guigarage.vagrant.configuration.VagrantFileProvider;
 import com.guigarage.vagrant.model.VagrantEnvironment;
 import com.guigarage.vagrant.util.VagrantException;
@@ -67,7 +63,7 @@ public class VagrantTestRule extends TestWatcher {
 	 * the Vagrant environment that is wrapped around the tests.
 	 * 
 	 * @param configuration
-	 *            the configuration for the Vagrant enviroment.
+	 *            the configuration for the Vagrant environment.
 	 */
 	public VagrantTestRule(VagrantConfiguration configuration) {
 		try {
@@ -76,24 +72,16 @@ public class VagrantTestRule extends TestWatcher {
 					+ UUID.randomUUID().toString());
 
 			if (configuration.getFileTemplateConfigurations() != null) {
-				for (VagrantFileTemplateConfiguration fileTemplate : configuration
+				for (VagrantFileProvider fileTemplate : configuration
 						.getFileTemplateConfigurations()) {
-					File fileInVagrantFolder = new File(this.vagrantDir,
-							fileTemplate.getPathInVagrantFolder());
-					@Cleanup
-					InputStream inputStream = fileTemplate.getInputStream();
-					FileUtils.copyInputStreamToFile(inputStream,
-							fileInVagrantFolder);
+					fileTemplate.copyIntoVagrantFolder(this.vagrantDir);
 				}
 			}
 
 			if (configuration.getFolderTemplateConfigurations() != null) {
 				for (VagrantFileProvider folderTemplate : configuration
 						.getFolderTemplateConfigurations()) {
-					File folderInVagrantFolder = new File(this.vagrantDir,
-							folderTemplate.getPathInVagrantFolder());
-					FileUtils.copyDirectory(folderTemplate.getDirectory(),
-							folderInVagrantFolder);
+					folderTemplate.copyIntoVagrantFolder(this.vagrantDir);
 				}
 			}
 

@@ -1,6 +1,6 @@
 package com.guigarage.vagrant.configuration;
 
-import static com.guigarage.vagrant.configuration.Preconditions.checkNotNull;
+import static com.guigarage.vagrant.util.Preconditions.checkNotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
