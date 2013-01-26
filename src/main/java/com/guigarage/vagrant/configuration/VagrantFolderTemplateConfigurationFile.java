@@ -1,38 +1,33 @@
 package com.guigarage.vagrant.configuration;
 
-import static com.guigarage.vagrant.util.Preconditions.checkState;
+import static com.guigarage.vagrant.util.Preconditions.checkNotNull;
 
 import java.io.File;
 import java.io.IOException;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import org.apache.commons.io.FileUtils;
 
 @Getter
+@RequiredArgsConstructor
 public class VagrantFolderTemplateConfigurationFile implements
 		VagrantFileProvider {
 
-	private String pathInVagrantFolder;
+	private final File localFolder;
 
-	private File localFolder;
-
-	/**
-	 * Creates a new {@link VagrantFolderTemplateConfigurationFile} that uses a
-	 * local path for the template folder
-	 * 
-	 * @param localFile
-	 *            local path of the template folder
-	 * @param pathInVagrantFolder
-	 *            path in Vagrant folder where the template should be copied
-	 */
-	public VagrantFolderTemplateConfigurationFile(File localFolder,
-			String pathInVagrantFolder) {
-		this.localFolder = localFolder;
-		this.pathInVagrantFolder = pathInVagrantFolder;
+	private final String pathInVagrantFolder;
+	
+	public VagrantFolderTemplateConfigurationFile(Builder builder) {
+		this.localFolder = checkNotNull(builder.withLocalFolder,
+				"localFolder need to be specified");
+		this.pathInVagrantFolder = checkNotNull(
+				builder.withPathInVagrantFolder,
+				"pathInVagrantFolder need to be specified");
 	}
 
 	@Override
@@ -51,12 +46,7 @@ public class VagrantFolderTemplateConfigurationFile implements
 		private String withPathInVagrantFolder;
 
 		public VagrantFolderTemplateConfigurationFile build() {
-			checkState(this.withLocalFolder != null,
-					"localFolder need to be specified");
-			checkState(this.withPathInVagrantFolder != null,
-					"pathInVagrantFolder need to be specified");
-			return new VagrantFolderTemplateConfigurationFile(
-					this.withLocalFolder, this.withPathInVagrantFolder);
+			return new VagrantFolderTemplateConfigurationFile(this);
 		}
 
 	}

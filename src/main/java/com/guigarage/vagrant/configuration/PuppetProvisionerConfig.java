@@ -40,7 +40,7 @@ public class PuppetProvisionerConfig {
 	 * @author Peter Fichtner
 	 */
 	@NoArgsConstructor(staticName = "create")
-	@Accessors(fluent = true, chain = true)
+	@Accessors(fluent = true, chain = true, prefix = "with")
 	@Setter
 	public static class Builder {
 

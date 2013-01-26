@@ -2,6 +2,7 @@ package com.guigarage.vagrant.junit;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
@@ -15,6 +16,7 @@ import com.guigarage.vagrant.configuration.VagrantConfigurationUtilities;
 import com.guigarage.vagrant.configuration.VagrantEnvironmentConfig;
 import com.guigarage.vagrant.configuration.VagrantFileProvider;
 import com.guigarage.vagrant.model.VagrantEnvironment;
+import com.guigarage.vagrant.util.Iterables;
 import com.guigarage.vagrant.util.VagrantException;
 
 /**
@@ -71,18 +73,15 @@ public class VagrantTestRule extends TestWatcher {
 			this.vagrantDir = new File(tmpDir, "vagrant-"
 					+ UUID.randomUUID().toString());
 
-			if (configuration.getFileTemplateConfigurations() != null) {
-				for (VagrantFileProvider fileTemplate : configuration
-						.getFileTemplateConfigurations()) {
-					fileTemplate.copyIntoVagrantFolder(this.vagrantDir);
-				}
+			for (VagrantFileProvider fileTemplate : Iterables
+					.nullToEmpty(configuration.getFileTemplateConfigurations())) {
+				fileTemplate.copyIntoVagrantFolder(this.vagrantDir);
 			}
 
-			if (configuration.getFolderTemplateConfigurations() != null) {
-				for (VagrantFileProvider folderTemplate : configuration
-						.getFolderTemplateConfigurations()) {
-					folderTemplate.copyIntoVagrantFolder(this.vagrantDir);
-				}
+			for (VagrantFileProvider folderTemplate : Iterables
+					.nullToEmpty(configuration
+							.getFolderTemplateConfigurations())) {
+				folderTemplate.copyIntoVagrantFolder(this.vagrantDir);
 			}
 
 			init("Vagrantfile",

@@ -15,6 +15,7 @@ import com.guigarage.vagrant.configuration.VagrantConfigurationUtilities;
 import com.guigarage.vagrant.configuration.VagrantEnvironmentConfig;
 import com.guigarage.vagrant.configuration.VagrantFileProvider;
 import com.guigarage.vagrant.model.VagrantEnvironment;
+import com.guigarage.vagrant.util.Iterables;
 
 public class Vagrant {
 
@@ -105,15 +106,13 @@ public class Vagrant {
 			vagrantFile.createNewFile();
 		}
 		FileUtils.writeStringToFile(vagrantFile, vagrantfileContent, false);
-		if (fileTemplates != null) {
-			for (VagrantFileProvider fileTemplate : fileTemplates) {
-				fileTemplate.copyIntoVagrantFolder(path);
-			}
+		for (VagrantFileProvider fileTemplate : Iterables
+				.nullToEmpty(fileTemplates)) {
+			fileTemplate.copyIntoVagrantFolder(path);
 		}
-		if (folderTemplates != null) {
-			for (VagrantFileProvider folderTemplate : folderTemplates) {
-				folderTemplate.copyIntoVagrantFolder(path);
-			}
+		for (VagrantFileProvider folderTemplate : Iterables
+				.nullToEmpty(folderTemplates)) {
+			folderTemplate.copyIntoVagrantFolder(path);
 		}
 		return createEnvironment(path);
 	}

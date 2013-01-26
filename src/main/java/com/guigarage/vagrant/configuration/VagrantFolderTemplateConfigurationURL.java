@@ -1,6 +1,6 @@
 package com.guigarage.vagrant.configuration;
 
-import static com.guigarage.vagrant.util.Preconditions.checkState;
+import static com.guigarage.vagrant.util.Preconditions.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,23 +8,27 @@ import java.net.URI;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import org.apache.commons.io.FileUtils;
 
 @Getter
+@RequiredArgsConstructor
 public class VagrantFolderTemplateConfigurationURL implements
 		VagrantFileProvider {
 
-	private String pathInVagrantFolder;
+	private final URI uriTemplate;
+	
+	private final String pathInVagrantFolder;
 
-	private URI uriTemplate;
-
-	public VagrantFolderTemplateConfigurationURL(URI uriTemplate,
-			String pathInVagrantFolder) {
-		this.uriTemplate = uriTemplate;
-		this.pathInVagrantFolder = pathInVagrantFolder;
+	public VagrantFolderTemplateConfigurationURL(Builder builder) {
+		this.uriTemplate = checkNotNull(builder.withUrlTemplate,
+				"uriTemplate need to be specified");
+		this.pathInVagrantFolder = checkNotNull(
+				builder.withPathInVagrantFolder,
+				"pathInVagrantFolder need to be specified");
 	}
 
 	@Override
@@ -43,12 +47,7 @@ public class VagrantFolderTemplateConfigurationURL implements
 		private URI withUrlTemplate;
 
 		public VagrantFolderTemplateConfigurationURL build() {
-			checkState(this.withUrlTemplate != null,
-					"uriTemplate need to be specified");
-			checkState(this.withPathInVagrantFolder != null,
-					"pathInVagrantFolder need to be specified");
-			return new VagrantFolderTemplateConfigurationURL(
-					this.withUrlTemplate, this.withPathInVagrantFolder);
+			return new VagrantFolderTemplateConfigurationURL(this);
 		}
 
 	}

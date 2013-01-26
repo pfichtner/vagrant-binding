@@ -29,53 +29,50 @@ public class NewBoxUsage {
 		VagrantEnvironmentConfig envConfig = Builder.create()
 				.withVagrantVmConfig(vmConfig).build();
 
-		VagrantEnvironment environment = null;
-
+		VagrantEnvironment environment = vagrant.createEnvironment(
+				vagrantTempDir, envConfig);
 		try {
-			environment = vagrant.createEnvironment(vagrantTempDir, envConfig);
 			environment.up();
 		} finally {
-			if (environment != null) {
+			try {
+				environment.removeBox(boxName);
+				environment.destroy();
 				try {
-					environment.removeBox(boxName);
-					environment.destroy();
+					FileUtils.forceDelete(vagrantTempDir);
+				} catch (Exception e) {
 					try {
-						FileUtils.forceDelete(vagrantTempDir);
-					} catch (Exception e) {
-						try {
-							FileUtils.forceDeleteOnExit(vagrantTempDir);
-						} catch (IOException e1) {
-							System.err.println("Can not delete vagrantfolder: "
-									+ vagrantTempDir);
-						}
+						FileUtils.forceDeleteOnExit(vagrantTempDir);
+					} catch (IOException e1) {
+						System.err.println("Can not delete vagrantfolder: "
+								+ vagrantTempDir);
 					}
-				} catch (Exception removeException) {
-					removeException.printStackTrace();
+				}
+			} catch (Exception removeException) {
+				removeException.printStackTrace();
 
-					String boxPath = null;
+				String boxPath = null;
+				try {
+					boxPath = environment.getBoxesPath();
+				} catch (Exception e) {
+					// ...
+				}
+				try {
+					FileUtils.forceDelete(vagrantTempDir);
+				} catch (Exception e) {
 					try {
-						boxPath = environment.getBoxesPath();
-					} catch (Exception e) {
-						// ...
+						FileUtils.forceDeleteOnExit(vagrantTempDir);
+					} catch (IOException e1) {
+						System.err.println("Can not delete vagrantfolder: "
+								+ vagrantTempDir);
 					}
-					try {
-						FileUtils.forceDelete(vagrantTempDir);
-					} catch (Exception e) {
-						try {
-							FileUtils.forceDeleteOnExit(vagrantTempDir);
-						} catch (IOException e1) {
-							System.err.println("Can not delete vagrantfolder: "
-									+ vagrantTempDir);
-						}
-					}
-					if (boxPath == null) {
-						fail("Can not remove box " + boxName
-								+ "! Please remove it manually.");
-					} else {
-						fail("Can not remove box " + boxName
-								+ "! Please remove it manually. (BoxPath:"
-								+ boxPath + ")");
-					}
+				}
+				if (boxPath == null) {
+					fail("Can not remove box " + boxName
+							+ "! Please remove it manually.");
+				} else {
+					fail("Can not remove box " + boxName
+							+ "! Please remove it manually. (BoxPath:"
+							+ boxPath + ")");
 				}
 			}
 		}

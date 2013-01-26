@@ -1,16 +1,11 @@
 package com.guigarage.vagrant.configuration;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.apache.commons.io.FileUtils;
-
-import lombok.Cleanup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -20,20 +15,23 @@ import lombok.experimental.Accessors;
  * running in.
  * 
  * @author hendrikebbers
- * 
+ * @author Peter Fichtner
  */
 @Getter
-@RequiredArgsConstructor
 public class VagrantFileTemplateConfigurationURL extends
 		AbstractVagrantFileProvider {
 
 	private final URL urlTemplate;
 
-	private final String pathInVagrantFolder;
+	public VagrantFileTemplateConfigurationURL(URL urlTemplate,
+			String pathInVagrantFolder) {
+		super(pathInVagrantFolder);
+		this.urlTemplate = urlTemplate;
+	}
 
-	private VagrantFileTemplateConfigurationURL(Builder builder) {
+	public VagrantFileTemplateConfigurationURL(Builder builder) {
+		super(builder.withPathInVagrantFolder);
 		this.urlTemplate = builder.withUrlTemplate;
-		this.pathInVagrantFolder = builder.withPathInVagrantFolder;
 	}
 
 	@Override
@@ -42,7 +40,7 @@ public class VagrantFileTemplateConfigurationURL extends
 	}
 
 	@NoArgsConstructor(staticName = "create")
-	@Accessors(fluent = true, chain = true)
+	@Accessors(fluent = true, chain = true, prefix = "with")
 	@Setter
 	public static class Builder {
 

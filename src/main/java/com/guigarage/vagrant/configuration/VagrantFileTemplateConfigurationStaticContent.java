@@ -6,22 +6,24 @@ import java.io.InputStream;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter
-@RequiredArgsConstructor
 public class VagrantFileTemplateConfigurationStaticContent extends
 		AbstractVagrantFileProvider {
 
 	private final String content;
 
-	private final String pathInVagrantFolder;
+	public VagrantFileTemplateConfigurationStaticContent(String content,
+			String pathInVagrantFolder) {
+		super(pathInVagrantFolder);
+		this.content = content;
+	}
 
 	private VagrantFileTemplateConfigurationStaticContent(Builder builder) {
-		this.content = builder.content;
-		this.pathInVagrantFolder = builder.withPathInVagrantFolder;
+		super(builder.withPathInVagrantFolder);
+		this.content = builder.withContent;
 	}
 
 	@Override
@@ -30,11 +32,11 @@ public class VagrantFileTemplateConfigurationStaticContent extends
 	}
 
 	@NoArgsConstructor(staticName = "create")
-	@Accessors(fluent = true, chain = true)
+	@Accessors(fluent = true, chain = true, prefix = "with")
 	@Setter
 	public static class Builder {
 
-		private String content;
+		private String withContent;
 
 		private String withPathInVagrantFolder;
 

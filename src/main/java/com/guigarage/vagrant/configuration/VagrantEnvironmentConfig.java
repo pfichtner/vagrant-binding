@@ -3,6 +3,8 @@ package com.guigarage.vagrant.configuration;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.guigarage.vagrant.util.Iterables;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import static com.guigarage.vagrant.util.Preconditions.*;
@@ -20,10 +22,8 @@ public class VagrantEnvironmentConfig {
 
 	public VagrantEnvironmentConfig(Iterable<VagrantVmConfig> vmConfigs) {
 		this.vmConfigs = new ArrayList<VagrantVmConfig>();
-		if (vmConfigs != null) {
-			for (VagrantVmConfig vagrantVmConfig : vmConfigs) {
-				this.vmConfigs.add(vagrantVmConfig);
-			}
+		for (VagrantVmConfig vagrantVmConfig : Iterables.nullToEmpty(vmConfigs)) {
+			this.vmConfigs.add(vagrantVmConfig);
 		}
 	}
 

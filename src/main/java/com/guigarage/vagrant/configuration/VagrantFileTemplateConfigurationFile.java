@@ -3,17 +3,12 @@ package com.guigarage.vagrant.configuration;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 
-import lombok.Cleanup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import org.apache.commons.io.FileUtils;
 
 /**
  * A configuration for a Vagrant file template. The local file defined by this
@@ -21,16 +16,24 @@ import org.apache.commons.io.FileUtils;
  * running in.
  * 
  * @author hendrikebbers
- * 
+ * @author Peter Fichtner
  */
 @Getter
-@RequiredArgsConstructor
 public class VagrantFileTemplateConfigurationFile extends
 		AbstractVagrantFileProvider {
 
 	private final File localFile;
 
-	private final String pathInVagrantFolder;
+	public VagrantFileTemplateConfigurationFile(File localFile,
+			String pathInVagrantFolder) {
+		super(pathInVagrantFolder);
+		this.localFile = localFile;
+	}
+
+	public VagrantFileTemplateConfigurationFile(Builder builder) {
+		super(builder.withPathInVagrantFolder);
+		this.localFile = builder.withLocalFile;
+	}
 
 	@Override
 	protected InputStream getInputStream() throws FileNotFoundException {
@@ -38,7 +41,7 @@ public class VagrantFileTemplateConfigurationFile extends
 	}
 
 	@NoArgsConstructor(staticName = "create")
-	@Accessors(fluent = true, chain = true)
+	@Accessors(fluent = true, chain = true, prefix = "with")
 	@Setter
 	public static class Builder {
 
@@ -47,8 +50,7 @@ public class VagrantFileTemplateConfigurationFile extends
 		private String withPathInVagrantFolder;
 
 		public VagrantFileTemplateConfigurationFile build() {
-			return new VagrantFileTemplateConfigurationFile(this.withLocalFile,
-					this.withPathInVagrantFolder);
+			return new VagrantFileTemplateConfigurationFile(this);
 		}
 	}
 

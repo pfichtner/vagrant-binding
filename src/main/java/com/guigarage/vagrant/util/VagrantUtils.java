@@ -19,6 +19,20 @@ import org.apache.commons.io.IOUtils;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class VagrantUtils {
 
+	@Getter(lazy = true)
+	private final URL lucid64Url = createUrl("http://files.vagrantup.com/lucid64.box");
+
+	@Getter(lazy = true)
+	private final URL lucid32Url = createUrl("http://files.vagrantup.com/lucid32.box");
+
+	private static URL createUrl(String url) {
+		try {
+			return new URL(url);
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	@Getter
 	private static VagrantUtils instance = new VagrantUtils();
 
@@ -35,7 +49,7 @@ public final class VagrantUtils {
 		URL url = ClassLoader.getSystemClassLoader().getResource(path);
 		if (url == null) {
 			// For use in JAR
-			url = this.getClass().getResource(path);
+			url = getClass().getResource(path);
 		}
 		if (url == null) {
 			url = ClassLoader.getSystemResource(path);
@@ -53,8 +67,8 @@ public final class VagrantUtils {
 	 */
 	public String getLucid32MasterContent() {
 		try {
-			URL fileUrl = load("com/guigarage/vagrant/master/lucid32");
-			return IOUtils.toString(fileUrl);
+			return IOUtils
+					.toString(load("com/guigarage/vagrant/master/lucid32"));
 		} catch (IOException exception) {
 			throw new RuntimeException(exception);
 		}
@@ -67,38 +81,11 @@ public final class VagrantUtils {
 	 */
 	public String getLucid64MasterContent() {
 		try {
-			URL fileUrl = load("com/guigarage/vagrant/master/lucid64");
-			return IOUtils.toString(fileUrl);
+			return IOUtils
+					.toString(load("com/guigarage/vagrant/master/lucid64"));
 		} catch (IOException exception) {
 			throw new RuntimeException(exception);
 		}
 	}
 
-	/**
-	 * Returns the default URL for the lucid32 box. The box is hosted at
-	 * vagrantup.com.
-	 * 
-	 * @return The URL for the box
-	 */
-	public URL getLucid32Url() {
-		try {
-			return new URL("http://files.vagrantup.com/lucid32.box");
-		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	/**
-	 * Returns the default URL for the lucid64 box. The box is hosted at
-	 * vagrantup.com.
-	 * 
-	 * @return The URL for the box
-	 */
-	public URL getLucid64Url() {
-		try {
-			return new URL("http://files.vagrantup.com/lucid64.box");
-		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
-		}
-	}
 }

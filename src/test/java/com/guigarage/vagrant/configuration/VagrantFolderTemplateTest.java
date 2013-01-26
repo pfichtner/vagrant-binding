@@ -116,7 +116,7 @@ public class VagrantFolderTemplateTest {
 		}
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test(expected = NullPointerException.class)
 	public void testBuilderWithoutFolderTemplates() {
 		VagrantFolderTemplateConfigurationFile.Builder.create()
 				.withPathInVagrantFolder("testFolder")

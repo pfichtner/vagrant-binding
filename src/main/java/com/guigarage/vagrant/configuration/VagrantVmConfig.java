@@ -1,6 +1,6 @@
 package com.guigarage.vagrant.configuration;
 
-import static com.guigarage.vagrant.util.Preconditions.checkState;
+import static com.guigarage.vagrant.util.Preconditions.*;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import com.guigarage.vagrant.util.Iterables;
 import com.guigarage.vagrant.util.VagrantUtils;
 
 /**
@@ -63,10 +64,9 @@ public class VagrantVmConfig {
 			String boxName, URL boxUrl,
 			Iterable<VagrantPortForwarding> portForwardings,
 			PuppetProvisionerConfig puppetProvisionerConfig, boolean guiMode) {
-		if (portForwardings != null) {
-			for (VagrantPortForwarding portForwarding : portForwardings) {
-				this.portForwardings.add(portForwarding);
-			}
+		for (VagrantPortForwarding portForwarding : Iterables
+				.nullToEmpty(portForwardings)) {
+			this.portForwardings.add(portForwarding);
 		}
 		this.puppetProvisionerConfig = puppetProvisionerConfig;
 		this.hostOnlyIp = ip;
@@ -78,11 +78,10 @@ public class VagrantVmConfig {
 	}
 
 	private VagrantVmConfig(Builder builder) {
-		checkState(builder.withBoxName != null, "No boxName defined");
 		this.name = builder.withName;
 		this.hostOnlyIp = builder.withHostOnlyIp;
 		this.hostName = builder.withHostName;
-		this.boxName = builder.withBoxName;
+		this.boxName = checkNotNull(builder.withBoxName, "No boxName defined");
 		this.boxUrl = builder.withBoxUrl;
 		this.portForwardings = new ArrayList<VagrantPortForwarding>(
 				builder.vagrantPortForwarding);
