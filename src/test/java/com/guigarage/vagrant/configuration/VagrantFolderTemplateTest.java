@@ -23,7 +23,7 @@ public class VagrantFolderTemplateTest {
 
 	@Test
 	public void testFolderTemplates() throws IOException {
-		new File(this.localeFolder.getRoot(), "file.tmp").createNewFile();
+		this.localeFolder.newFile("file.tmp");
 		VagrantFolderTemplateConfigurationFile folderTemplateConfiguration = VagrantFolderTemplateConfigurationFile.Builder
 				.create().withPathInVagrantFolder("testFolder")
 				.withLocalFolder(this.localeFolder.getRoot()).build();
@@ -51,7 +51,7 @@ public class VagrantFolderTemplateTest {
 
 	@Test
 	public void testFolderUriTemplates() throws IOException {
-		new File(this.localeFolder.getRoot(), "file.tmp").createNewFile();
+		this.localeFolder.newFile("file.tmp");
 		VagrantFolderTemplateConfigurationURL folderTemplateConfiguration = VagrantFolderTemplateConfigurationURL.Builder
 				.create().withPathInVagrantFolder("testFolder")
 				.withUrlTemplate(this.localeFolder.getRoot().toURI()).build();
