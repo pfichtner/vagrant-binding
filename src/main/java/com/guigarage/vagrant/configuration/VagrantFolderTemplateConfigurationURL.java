@@ -3,6 +3,7 @@ package com.guigarage.vagrant.configuration;
 import static com.guigarage.vagrant.configuration.Preconditions.checkState;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 
 import lombok.Getter;
@@ -10,13 +11,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import org.apache.commons.io.FileUtils;
+
 @Getter
 public class VagrantFolderTemplateConfigurationURL implements
-		VagrantFolderTemplateConfiguration {
-
-	// TODO: Das kopieren der Dateien sollte in eine Methode in dieser Klasse
-	// augelagert werden die das VagrantEnvironment als Übergabeparameter
-	// bekommt.
+		VagrantFileProvider {
 
 	private String pathInVagrantFolder;
 
@@ -29,8 +28,9 @@ public class VagrantFolderTemplateConfigurationURL implements
 	}
 
 	@Override
-	public File getDirectory() {
-		return new File(this.uriTemplate);
+	public void copyIntoVagrantFolder(File vagrantFolder) throws IOException {
+		FileUtils.copyDirectory(new File(this.uriTemplate), new File(
+				vagrantFolder, getPathInVagrantFolder()));
 	}
 
 	@NoArgsConstructor(staticName = "create")

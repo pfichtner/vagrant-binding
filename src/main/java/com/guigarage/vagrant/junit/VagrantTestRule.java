@@ -17,7 +17,7 @@ import com.guigarage.vagrant.configuration.VagrantConfiguration;
 import com.guigarage.vagrant.configuration.VagrantConfigurationUtilities;
 import com.guigarage.vagrant.configuration.VagrantEnvironmentConfig;
 import com.guigarage.vagrant.configuration.VagrantFileTemplateConfiguration;
-import com.guigarage.vagrant.configuration.VagrantFolderTemplateConfiguration;
+import com.guigarage.vagrant.configuration.VagrantFileProvider;
 import com.guigarage.vagrant.model.VagrantEnvironment;
 import com.guigarage.vagrant.util.VagrantException;
 
@@ -88,7 +88,7 @@ public class VagrantTestRule extends TestWatcher {
 			}
 
 			if (configuration.getFolderTemplateConfigurations() != null) {
-				for (VagrantFolderTemplateConfiguration folderTemplate : configuration
+				for (VagrantFileProvider folderTemplate : configuration
 						.getFolderTemplateConfigurations()) {
 					File folderInVagrantFolder = new File(this.vagrantDir,
 							folderTemplate.getPathInVagrantFolder());

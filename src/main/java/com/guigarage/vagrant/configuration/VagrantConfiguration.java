@@ -22,20 +22,20 @@ public class VagrantConfiguration {
 
 	private final VagrantEnvironmentConfig environmentConfig;
 
-	private final List<VagrantFileTemplateConfiguration> fileTemplateConfigurations = new ArrayList<VagrantFileTemplateConfiguration>();
+	private final List<VagrantFileProvider> fileTemplateConfigurations = new ArrayList<VagrantFileProvider>();
 
-	private final List<VagrantFolderTemplateConfiguration> folderTemplateConfigurations = new ArrayList<VagrantFolderTemplateConfiguration>();
+	private final List<VagrantFileProvider> folderTemplateConfigurations = new ArrayList<VagrantFileProvider>();
 
 	public VagrantConfiguration(
 			VagrantEnvironmentConfig vagrantEnvironmentConfig,
-			Iterable<VagrantFileTemplateConfiguration> fileTemplateConfigurations,
-			Iterable<VagrantFolderTemplateConfiguration> folderTemplateConfigurations) {
+			Iterable<VagrantFileProvider> fileTemplateConfigurations,
+			Iterable<VagrantFileProvider> folderTemplateConfigurations) {
 		this.environmentConfig = checkNotNull(vagrantEnvironmentConfig,
 				"No VagrantEnvironmentConfig defined");
-		for (VagrantFileTemplateConfiguration fileTemplateConfiguration : fileTemplateConfigurations) {
+		for (VagrantFileProvider fileTemplateConfiguration : fileTemplateConfigurations) {
 			this.fileTemplateConfigurations.add(fileTemplateConfiguration);
 		}
-		for (VagrantFolderTemplateConfiguration folderTemplateConfiguration : folderTemplateConfigurations) {
+		for (VagrantFileProvider folderTemplateConfiguration : folderTemplateConfigurations) {
 			this.folderTemplateConfigurations.add(folderTemplateConfiguration);
 		}
 	}
@@ -53,9 +53,9 @@ public class VagrantConfiguration {
 
 		private VagrantEnvironmentConfig withVagrantEnvironmentConfig;
 
-		private List<VagrantFileTemplateConfiguration> fileTemplateConfigurations = new ArrayList<VagrantFileTemplateConfiguration>();
+		private List<VagrantFileProvider> fileTemplateConfigurations = new ArrayList<VagrantFileProvider>();
 
-		private List<VagrantFolderTemplateConfiguration> folderTemplateConfigurations = new ArrayList<VagrantFolderTemplateConfiguration>();
+		private List<VagrantFileProvider> folderTemplateConfigurations = new ArrayList<VagrantFileProvider>();
 
 		public Builder withVagrantFileTemplateConfiguration(
 				VagrantFileTemplateConfigurationURL fileTemplateConfiguration) {
@@ -64,7 +64,7 @@ public class VagrantConfiguration {
 		}
 
 		public Builder withVagrantFolderTemplateConfiguration(
-				VagrantFolderTemplateConfiguration folderTemplateConfiguration) {
+				VagrantFileProvider folderTemplateConfiguration) {
 			this.folderTemplateConfigurations.add(folderTemplateConfiguration);
 			return this;
 		}

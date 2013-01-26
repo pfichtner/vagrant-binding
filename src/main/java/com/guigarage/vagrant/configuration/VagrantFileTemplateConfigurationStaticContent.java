@@ -12,12 +12,8 @@ import lombok.experimental.Accessors;
 
 @Getter
 @RequiredArgsConstructor
-public class VagrantFileTemplateConfigurationStaticContent implements
-		VagrantFileTemplateConfiguration {
-
-	// TODO: Das kopieren der Dateien sollte in eine Methode in dieser Klasse
-	// augelagert werden die das VagrantEnvironment als übergabeparameter
-	// bekommt.
+public class VagrantFileTemplateConfigurationStaticContent extends
+		AbstractVagrantFileProvider {
 
 	private final String content;
 
@@ -29,7 +25,7 @@ public class VagrantFileTemplateConfigurationStaticContent implements
 	}
 
 	@Override
-	public InputStream getInputStream() throws IOException {
+	protected InputStream getInputStream() throws IOException {
 		return new ByteArrayInputStream(this.content.getBytes());
 	}
 

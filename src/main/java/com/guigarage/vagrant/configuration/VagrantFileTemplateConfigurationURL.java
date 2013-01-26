@@ -1,9 +1,13 @@
 package com.guigarage.vagrant.configuration;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
+
+import lombok.Cleanup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +24,8 @@ import lombok.experimental.Accessors;
  */
 @Getter
 @RequiredArgsConstructor
-public class VagrantFileTemplateConfigurationURL implements
-		VagrantFileTemplateConfiguration {
-
-	// TODO: Das kopieren der Dateien sollte in eine Methode in dieser Klasse
-	// augelagert werden die das VagrantEnvironment als übergabeparameter
-	// bekommt.
+public class VagrantFileTemplateConfigurationURL extends
+		AbstractVagrantFileProvider {
 
 	private final URL urlTemplate;
 
@@ -37,7 +37,7 @@ public class VagrantFileTemplateConfigurationURL implements
 	}
 
 	@Override
-	public InputStream getInputStream() throws IOException {
+	protected InputStream getInputStream() throws IOException {
 		return this.urlTemplate.openStream();
 	}
 

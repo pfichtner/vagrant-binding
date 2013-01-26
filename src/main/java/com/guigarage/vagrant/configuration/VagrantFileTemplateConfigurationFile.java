@@ -3,13 +3,17 @@ package com.guigarage.vagrant.configuration;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
+import lombok.Cleanup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+
+import org.apache.commons.io.FileUtils;
 
 /**
  * A configuration for a Vagrant file template. The local file defined by this
@@ -21,19 +25,15 @@ import lombok.experimental.Accessors;
  */
 @Getter
 @RequiredArgsConstructor
-public class VagrantFileTemplateConfigurationFile implements
-		VagrantFileTemplateConfiguration {
-
-	// TODO: Das kopieren der Dateien sollte in eine Methode in dieser Klasse
-	// augelagert werden die das VagrantEnvironment als übergabeparameter
-	// bekommt.
+public class VagrantFileTemplateConfigurationFile extends
+		AbstractVagrantFileProvider {
 
 	private final File localFile;
 
 	private final String pathInVagrantFolder;
 
 	@Override
-	public InputStream getInputStream() throws FileNotFoundException {
+	protected InputStream getInputStream() throws FileNotFoundException {
 		return new FileInputStream(this.localFile);
 	}
 

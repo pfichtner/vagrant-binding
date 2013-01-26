@@ -2,11 +2,8 @@ package com.guigarage.vagrant;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import lombok.Cleanup;
 
 import org.apache.commons.io.FileUtils;
 import org.jruby.RubyObject;
@@ -16,8 +13,7 @@ import org.jruby.embed.ScriptingContainer;
 import com.guigarage.vagrant.configuration.VagrantConfiguration;
 import com.guigarage.vagrant.configuration.VagrantConfigurationUtilities;
 import com.guigarage.vagrant.configuration.VagrantEnvironmentConfig;
-import com.guigarage.vagrant.configuration.VagrantFileTemplateConfiguration;
-import com.guigarage.vagrant.configuration.VagrantFolderTemplateConfiguration;
+import com.guigarage.vagrant.configuration.VagrantFileProvider;
 import com.guigarage.vagrant.model.VagrantEnvironment;
 
 public class Vagrant {
@@ -44,18 +40,20 @@ public class Vagrant {
 	}
 
 	public VagrantEnvironment createEnvironment() {
-		RubyObject vagrantEnv = (RubyObject) this.scriptingContainer
-				.runScriptlet("require 'rubygems'\n" + "require 'vagrant'\n"
-						+ "\n" + "return Vagrant::Environment.new");
-		return new VagrantEnvironment(vagrantEnv);
+		return new VagrantEnvironment(
+				(RubyObject) this.scriptingContainer
+						.runScriptlet("require 'rubygems'\n"
+								+ "require 'vagrant'\n" + "\n"
+								+ "return Vagrant::Environment.new"));
 	}
 
 	public VagrantEnvironment createEnvironment(File path) {
-		RubyObject vagrantEnv = (RubyObject) this.scriptingContainer
-				.runScriptlet("require 'rubygems'\n" + "require 'vagrant'\n"
-						+ "\n" + "return Vagrant::Environment.new(:cwd => '"
-						+ path.getAbsolutePath() + "')");
-		return new VagrantEnvironment(vagrantEnv);
+		return new VagrantEnvironment(
+				(RubyObject) this.scriptingContainer
+						.runScriptlet("require 'rubygems'\n"
+								+ "require 'vagrant'\n" + "\n"
+								+ "return Vagrant::Environment.new(:cwd => '"
+								+ path.getAbsolutePath() + "')"));
 	}
 
 	public VagrantEnvironment createEnvironment(File path,
@@ -68,19 +66,17 @@ public class Vagrant {
 
 	public VagrantEnvironment createEnvironment(File path,
 			VagrantEnvironmentConfig environmentConfig,
-			Iterable<VagrantFileTemplateConfiguration> fileTemplates)
-			throws IOException {
+			Iterable<VagrantFileProvider> fileTemplates) throws IOException {
 		return createEnvironment(path,
 				VagrantConfigurationUtilities
 						.createVagrantFileContent(environmentConfig),
 				fileTemplates, null);
 	}
 
-	public VagrantEnvironment createEnvironment(
-			File path,
+	public VagrantEnvironment createEnvironment(File path,
 			VagrantEnvironmentConfig environmentConfig,
-			Iterable<? extends VagrantFileTemplateConfiguration> fileTemplates,
-			Iterable<? extends VagrantFolderTemplateConfiguration> folderTemplates)
+			Iterable<? extends VagrantFileProvider> fileTemplates,
+			Iterable<? extends VagrantFileProvider> folderTemplates)
 			throws IOException {
 		return createEnvironment(path,
 				VagrantConfigurationUtilities
@@ -98,11 +94,10 @@ public class Vagrant {
 				configuration.getFolderTemplateConfigurations());
 	}
 
-	public VagrantEnvironment createEnvironment(
-			File path,
+	public VagrantEnvironment createEnvironment(File path,
 			String vagrantfileContent,
-			Iterable<? extends VagrantFileTemplateConfiguration> fileTemplates,
-			Iterable<? extends VagrantFolderTemplateConfiguration> folderTemplates)
+			Iterable<? extends VagrantFileProvider> fileTemplates,
+			Iterable<? extends VagrantFileProvider> folderTemplates)
 			throws IOException {
 		path.mkdirs();
 		File vagrantFile = new File(path, "Vagrantfile");
@@ -111,27 +106,16 @@ public class Vagrant {
 		}
 		FileUtils.writeStringToFile(vagrantFile, vagrantfileContent, false);
 		if (fileTemplates != null) {
-			for (VagrantFileTemplateConfiguration fileTemplate : fileTemplates) {
-				File fileInVagrantFolder = new File(path,
-						fileTemplate.getPathInVagrantFolder());
-				File parentFile = fileInVagrantFolder.getParentFile();
-				if (parentFile != null && !parentFile.exists()) {
-					parentFile.mkdirs();
-				}
-				@Cleanup
-				InputStream inputStream = fileTemplate.getInputStream();
-				FileUtils.copyInputStreamToFile(inputStream,
-						fileInVagrantFolder);
+			for (VagrantFileProvider fileTemplate : fileTemplates) {
+				fileTemplate.copyIntoVagrantFolder(path);
 			}
 		}
 		if (folderTemplates != null) {
-			for (VagrantFolderTemplateConfiguration folderTemplate : folderTemplates) {
-				File folderInVagrantFolder = new File(path,
-						folderTemplate.getPathInVagrantFolder());
-				FileUtils.copyDirectory(folderTemplate.getDirectory(),
-						folderInVagrantFolder);
+			for (VagrantFileProvider folderTemplate : folderTemplates) {
+				folderTemplate.copyIntoVagrantFolder(path);
 			}
 		}
 		return createEnvironment(path);
 	}
+
 }
