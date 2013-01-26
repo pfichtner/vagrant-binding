@@ -1,5 +1,7 @@
 package com.guigarage.vagrant.configuration;
 
+import static com.guigarage.vagrant.configuration.Preconditions.checkNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,11 +9,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import static com.guigarage.vagrant.configuration.Preconditions.*;
 
 /**
  * Global configuration for a Vagrant environment that uses
- * {@link VagrantFileTemplateConfiguration} for a Vagrant environment
+ * {@link VagrantFileTemplateConfigurationURL} for a Vagrant environment
  * 
  * @author hendrikebbers
  * @author Peter Fichtner
@@ -57,7 +58,7 @@ public class VagrantConfiguration {
 		private List<VagrantFolderTemplateConfiguration> folderTemplateConfigurations = new ArrayList<VagrantFolderTemplateConfiguration>();
 
 		public Builder withVagrantFileTemplateConfiguration(
-				VagrantFileTemplateConfiguration fileTemplateConfiguration) {
+				VagrantFileTemplateConfigurationURL fileTemplateConfiguration) {
 			this.fileTemplateConfigurations.add(fileTemplateConfiguration);
 			return this;
 		}

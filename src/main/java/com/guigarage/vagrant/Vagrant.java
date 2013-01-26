@@ -2,8 +2,11 @@ package com.guigarage.vagrant;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+
+import lombok.Cleanup;
 
 import org.apache.commons.io.FileUtils;
 import org.jruby.RubyObject;
@@ -73,10 +76,11 @@ public class Vagrant {
 				fileTemplates, null);
 	}
 
-	public VagrantEnvironment createEnvironment(File path,
+	public VagrantEnvironment createEnvironment(
+			File path,
 			VagrantEnvironmentConfig environmentConfig,
-			Iterable<VagrantFileTemplateConfiguration> fileTemplates,
-			Iterable<VagrantFolderTemplateConfiguration> folderTemplates)
+			Iterable<? extends VagrantFileTemplateConfiguration> fileTemplates,
+			Iterable<? extends VagrantFolderTemplateConfiguration> folderTemplates)
 			throws IOException {
 		return createEnvironment(path,
 				VagrantConfigurationUtilities
@@ -94,10 +98,11 @@ public class Vagrant {
 				configuration.getFolderTemplateConfigurations());
 	}
 
-	public VagrantEnvironment createEnvironment(File path,
+	public VagrantEnvironment createEnvironment(
+			File path,
 			String vagrantfileContent,
-			Iterable<VagrantFileTemplateConfiguration> fileTemplates,
-			Iterable<VagrantFolderTemplateConfiguration> folderTemplates)
+			Iterable<? extends VagrantFileTemplateConfiguration> fileTemplates,
+			Iterable<? extends VagrantFolderTemplateConfiguration> folderTemplates)
 			throws IOException {
 		path.mkdirs();
 		File vagrantFile = new File(path, "Vagrantfile");
@@ -109,31 +114,22 @@ public class Vagrant {
 			for (VagrantFileTemplateConfiguration fileTemplate : fileTemplates) {
 				File fileInVagrantFolder = new File(path,
 						fileTemplate.getPathInVagrantFolder());
-				if (fileInVagrantFolder.getParentFile() != null
-						&& !fileInVagrantFolder.getParentFile().exists()) {
-					fileInVagrantFolder.getParentFile().mkdirs();
+				File parentFile = fileInVagrantFolder.getParentFile();
+				if (parentFile != null && !parentFile.exists()) {
+					parentFile.mkdirs();
 				}
-				if (fileTemplate.useLocalFile()) {
-					FileUtils.copyFile(fileTemplate.getLocalFile(),
-							fileInVagrantFolder);
-				} else {
-					FileUtils.copyURLToFile(fileTemplate.getUrlTemplate(),
-							fileInVagrantFolder);
-				}
+				@Cleanup
+				InputStream inputStream = fileTemplate.getInputStream();
+				FileUtils.copyInputStreamToFile(inputStream,
+						fileInVagrantFolder);
 			}
 		}
 		if (folderTemplates != null) {
 			for (VagrantFolderTemplateConfiguration folderTemplate : folderTemplates) {
 				File folderInVagrantFolder = new File(path,
 						folderTemplate.getPathInVagrantFolder());
-				if (folderTemplate.useUriTemplate()) {
-					FileUtils.copyDirectory(
-							new File(folderTemplate.getUriTemplate()),
-							folderInVagrantFolder);
-				} else {
-					FileUtils.copyDirectory(folderTemplate.getLocalFolder(),
-							folderInVagrantFolder);
-				}
+				FileUtils.copyDirectory(folderTemplate.getDirectory(),
+						folderInVagrantFolder);
 			}
 		}
 		return createEnvironment(path);

@@ -27,7 +27,7 @@ public class VagrantFolderTemplateTest {
 			localeFolder.mkdirs();
 			new File(localeFolder, "file.tmp").createNewFile();
 
-			VagrantFolderTemplateConfiguration folderTemplateConfiguration = VagrantFolderTemplateConfiguration.Builder
+			VagrantFolderTemplateConfigurationFile folderTemplateConfiguration = VagrantFolderTemplateConfigurationFile.Builder
 					.create().withPathInVagrantFolder("testFolder")
 					.withLocalFolder(localeFolder).build();
 			VagrantVmConfig vmConfig = VagrantVmConfig.Builder.create()
@@ -66,7 +66,7 @@ public class VagrantFolderTemplateTest {
 			localeFolder.mkdirs();
 			new File(localeFolder, "file.tmp").createNewFile();
 
-			VagrantFolderTemplateConfiguration folderTemplateConfiguration = VagrantFolderTemplateConfiguration.Builder
+			VagrantFolderTemplateConfigurationURL folderTemplateConfiguration = VagrantFolderTemplateConfigurationURL.Builder
 					.create().withPathInVagrantFolder("testFolder")
 					.withUrlTemplate(localeFolder.toURI()).build();
 			VagrantVmConfig vmConfig = VagrantVmConfig.Builder.create()
@@ -118,7 +118,7 @@ public class VagrantFolderTemplateTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void testBuilderWithoutFolderTemplates() {
-		VagrantFolderTemplateConfiguration.Builder.create()
+		VagrantFolderTemplateConfigurationFile.Builder.create()
 				.withPathInVagrantFolder("testFolder")
 				.withLocalFolder((File) null).build();
 	}

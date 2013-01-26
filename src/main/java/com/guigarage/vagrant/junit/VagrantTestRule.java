@@ -2,7 +2,10 @@ package com.guigarage.vagrant.junit;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
+
+import lombok.Cleanup;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
@@ -77,13 +80,10 @@ public class VagrantTestRule extends TestWatcher {
 						.getFileTemplateConfigurations()) {
 					File fileInVagrantFolder = new File(this.vagrantDir,
 							fileTemplate.getPathInVagrantFolder());
-					if (fileTemplate.useLocalFile()) {
-						FileUtils.copyFile(fileTemplate.getLocalFile(),
-								fileInVagrantFolder);
-					} else {
-						FileUtils.copyURLToFile(fileTemplate.getUrlTemplate(),
-								fileInVagrantFolder);
-					}
+					@Cleanup
+					InputStream inputStream = fileTemplate.getInputStream();
+					FileUtils.copyInputStreamToFile(inputStream,
+							fileInVagrantFolder);
 				}
 			}
 
@@ -92,15 +92,8 @@ public class VagrantTestRule extends TestWatcher {
 						.getFolderTemplateConfigurations()) {
 					File folderInVagrantFolder = new File(this.vagrantDir,
 							folderTemplate.getPathInVagrantFolder());
-					if (folderTemplate.useUriTemplate()) {
-						FileUtils.copyDirectory(
-								new File(folderTemplate.getUriTemplate()),
-								folderInVagrantFolder);
-					} else {
-						FileUtils.copyDirectory(
-								folderTemplate.getLocalFolder(),
-								folderInVagrantFolder);
-					}
+					FileUtils.copyDirectory(folderTemplate.getDirectory(),
+							folderInVagrantFolder);
 				}
 			}
 
