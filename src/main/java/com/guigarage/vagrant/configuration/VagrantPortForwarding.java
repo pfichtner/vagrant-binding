@@ -30,7 +30,7 @@ public class VagrantPortForwarding {
 	}
 
 	@NoArgsConstructor(staticName = "create")
-	@Accessors(fluent = true, chain = true, prefix = "with")
+	@Accessors(fluent = true, chain = true)
 	@Setter
 	public static class Builder {
 

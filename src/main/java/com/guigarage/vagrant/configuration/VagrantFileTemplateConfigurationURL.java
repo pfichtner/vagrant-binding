@@ -40,7 +40,7 @@ public class VagrantFileTemplateConfigurationURL extends
 	}
 
 	@NoArgsConstructor(staticName = "create")
-	@Accessors(fluent = true, chain = true, prefix = "with")
+	@Accessors(fluent = true, chain = true)
 	@Setter
 	public static class Builder {
 

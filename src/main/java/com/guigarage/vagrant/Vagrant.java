@@ -67,7 +67,7 @@ public class Vagrant {
 
 	public VagrantEnvironment createEnvironment(File path,
 			VagrantEnvironmentConfig environmentConfig,
-			Iterable<VagrantFileProvider> fileTemplates) throws IOException {
+			Iterable<? extends VagrantFileProvider> fileTemplates) throws IOException {
 		return createEnvironment(path,
 				VagrantConfigurationUtilities
 						.createVagrantFileContent(environmentConfig),
