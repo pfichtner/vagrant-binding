@@ -1,8 +1,10 @@
 package com.guigarage.vagrant.model;
 
+import lombok.RequiredArgsConstructor;
+
 import org.jruby.RubyObject;
-import org.jruby.RubySymbol;
 import org.jruby.exceptions.RaiseException;
+import org.jruby.runtime.builtin.IRubyObject;
 
 import com.guigarage.vagrant.util.VagrantException;
 
@@ -11,98 +13,57 @@ import com.guigarage.vagrant.util.VagrantException;
  * and acces the VM by SSH.
  * 
  * @author hendrikebbers
- * 
+ * @author Peter Fichtner
  */
+@RequiredArgsConstructor
 public class VagrantVm {
 
-	private RubyObject vagrantVm;
-
-	/**
-	 * The {@link VagrantVm} is a wrapper for a Vagrant VM. The class contains
-	 * the JRuby object for the connections and forwards the method calls to it.
-	 * This constructor is used by the builder classes or the
-	 * {@link VagrantEnvironment} class. You do not need to call it in your
-	 * code.
-	 * 
-	 * @param vagrantVm
-	 *            The Vagrant VM connection object
-	 */
-	public VagrantVm(RubyObject vagrantVm) {
-		this.vagrantVm = vagrantVm;
-	}
+	private final RubyObject vagrantVm;
 
 	/**
 	 * Creates & starts the VM.
 	 */
 	public void up() {
-		try {
-			this.vagrantVm.callMethod("up");
-		} catch (RaiseException exception) {
-			throw new VagrantException(exception);
-		}
+		callMethod("up");
 	}
 
 	/**
 	 * Starts the VM.
 	 */
 	public void start() {
-		try {
-			this.vagrantVm.callMethod("start");
-		} catch (RaiseException exception) {
-			throw new VagrantException(exception);
-		}
+		callMethod("start");
 	}
 
 	/**
 	 * Halts the VM.
 	 */
 	public void halt() {
-		try {
-			this.vagrantVm.callMethod("halt");
-		} catch (RaiseException exception) {
-			throw new VagrantException(exception);
-		}
+		callMethod("halt");
 	}
 
 	/**
 	 * Reloads the VM.
 	 */
 	public void reload() {
-		try {
-			this.vagrantVm.callMethod("reload");
-		} catch (RaiseException exception) {
-			throw new VagrantException(exception);
-		}
+		callMethod("reload");
 	}
 
 	/**
 	 * Destroys the VM.
 	 */
 	public void destroy() {
-		try {
-			this.vagrantVm.callMethod("destroy");
-		} catch (RaiseException exception) {
-			throw new VagrantException(exception);
-		}
+		callMethod("destroy");
 	}
 
 	/**
 	 * Suspends the VM.
 	 */
 	public void suspend() {
-		try {
-			this.vagrantVm.callMethod("suspend");
-		} catch (RaiseException exception) {
-			throw new VagrantException(exception);
-		}
+		callMethod("suspend");
 	}
 
 	public void resume() {
-		try {
-			this.vagrantVm.callMethod("resume");
-		} catch (RaiseException exception) {
-			throw new VagrantException(exception);
-		}
+		callMethod("resume");
 	}
 
 	/**
@@ -111,7 +72,7 @@ public class VagrantVm {
 	 * @return <code>true</code> if the VM is running
 	 */
 	public boolean isRunning() {
-		return getState().equals("running");
+		return isState("running");
 	}
 
 	/**
@@ -120,8 +81,7 @@ public class VagrantVm {
 	 * @return true if the VM is created.
 	 */
 	public boolean isCreated() {
-		String state = getState();
-		return !state.equals("not_created");
+		return !isState("not_created");
 	}
 
 	/**
@@ -130,8 +90,7 @@ public class VagrantVm {
 	 * @return true if the VM is paused.
 	 */
 	public boolean isPaused() {
-		String state = getState();
-		return state.equals("saved");
+		return isState("saved");
 	}
 
 	/**
@@ -147,12 +106,7 @@ public class VagrantVm {
 		// poweroff: VM ist vorhanden aber runtergefahren
 		// running: VM läuft
 		// saved: VM wurde pausiert
-		try {
-			RubySymbol symbol = (RubySymbol) this.vagrantVm.callMethod("state");
-			return symbol.asJavaString();
-		} catch (RaiseException exception) {
-			throw new VagrantException(exception);
-		}
+		return callMethod("state").asJavaString();
 	}
 
 	/**
@@ -161,11 +115,7 @@ public class VagrantVm {
 	 * @return the name of the VM
 	 */
 	public String getName() {
-		try {
-			return ((RubyObject) this.vagrantVm.callMethod("name")).toString();
-		} catch (RaiseException exception) {
-			throw new VagrantException(exception);
-		}
+		return callMethod("name").toString();
 	}
 
 	/**
@@ -175,12 +125,7 @@ public class VagrantVm {
 	 * @return a new SSH connection
 	 */
 	public VagrantSSHConnection createConnection() {
-		try {
-			return new VagrantSSHConnection(
-					((RubyObject) this.vagrantVm.callMethod("channel")));
-		} catch (RaiseException exception) {
-			throw new VagrantException(exception);
-		}
+		return new VagrantSSHConnection((RubyObject) callMethod("channel"));
 	}
 
 	/**
@@ -189,10 +134,19 @@ public class VagrantVm {
 	 * @return the UUID of this VM
 	 */
 	public String getUuid() {
+		return callMethod("uuid").toString();
+	}
+
+	private IRubyObject callMethod(String method) {
 		try {
-			return ((RubyObject) this.vagrantVm.callMethod("uuid")).toString();
+			return this.vagrantVm.callMethod(method);
 		} catch (RaiseException exception) {
 			throw new VagrantException(exception);
 		}
 	}
+
+	private boolean isState(String queryState) {
+		return queryState.equals(getState());
+	}
+
 }

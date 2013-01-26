@@ -1,5 +1,7 @@
 package com.guigarage.vagrant.model;
 
+import lombok.RequiredArgsConstructor;
+
 import org.jruby.RubyBoolean;
 import org.jruby.RubyNumeric;
 import org.jruby.RubyObject;
@@ -16,27 +18,16 @@ import com.guigarage.vagrant.util.VagrantException;
  * @author hendrikebbers
  * 
  */
+@RequiredArgsConstructor
 public class VagrantSSHConnection {
 
-	private RubyObject vagrantSSH;
+	private final RubyObject vagrantSSH;
 
 	/**
-	 * Constructor for the SHH connection. Normally you do not need to create a
-	 * connection on your own. Use {@link VagrantVm.createConnection()} to
-	 * create a new SSH connection.
+	 * Checks if the connection is ready. Normally you do not need this method
+	 * because the connection should be always ready.
 	 * 
-	 * @param vagrantSSH
-	 *            The Vagrant SSH connection object
-	 */
-	public VagrantSSHConnection(RubyObject vagrantSSH) {
-		this.vagrantSSH = vagrantSSH;
-	}
-
-	/**
-	 * Checks if the connection is ready. Normally you do not need this this
-	 * methode because the connection should be always ready.
-	 * 
-	 * @return true if the SSH connection is ready
+	 * @return <code>true</code> if the SSH connection is ready
 	 */
 	public boolean isReady() {
 		try {
@@ -51,7 +42,7 @@ public class VagrantSSHConnection {
 	 * Uploads a file to the vm.
 	 * 
 	 * @param localPath
-	 *            the locale path of the file
+	 *            the local path of the file
 	 * @param pathOnVM
 	 *            the path on the vm where you want to upload the local file
 	 */
@@ -71,7 +62,7 @@ public class VagrantSSHConnection {
 	 * @param command
 	 *            the command you want to execute. for example "touch /file.tmp"
 	 * @param sudo
-	 *            if true the command will be executed as sudo
+	 *            if <code>true</code> the command will be executed as sudo
 	 * @return the returncode of the command
 	 */
 	public int execute(String command, boolean sudo) {
@@ -95,4 +86,5 @@ public class VagrantSSHConnection {
 	public int execute(String command) {
 		return execute(command, false);
 	}
+
 }

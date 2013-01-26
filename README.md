@@ -24,7 +24,7 @@ Here is a short example that creates an Ubuntu 32bit vm:
     Vagrant vagrant = new Vagrant(true);
 
     VagrantEnvironment environment = vagrant
-        .createEnvironment(new File("my/locale/path"), environmentConfig);
+        .createEnvironment(new File("my/local/path"), environmentConfig);
 
     environment.up();
 

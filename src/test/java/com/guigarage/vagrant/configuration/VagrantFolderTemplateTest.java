@@ -16,17 +16,17 @@ import com.guigarage.vagrant.model.VagrantEnvironment;
 public class VagrantFolderTemplateTest {
 
 	@Rule
-	public TemporaryFolder localeFolder = new TemporaryFolder();
+	public TemporaryFolder localFolder = new TemporaryFolder();
 
 	@Rule
 	public TemporaryFolder vagrantPath = new TemporaryFolder();
 
 	@Test
 	public void testFolderTemplates() throws IOException {
-		this.localeFolder.newFile("file.tmp");
+		this.localFolder.newFile("file.tmp");
 		VagrantFolderTemplateConfigurationFile folderTemplateConfiguration = VagrantFolderTemplateConfigurationFile.Builder
 				.create().withPathInVagrantFolder("testFolder")
-				.withLocalFolder(this.localeFolder.getRoot()).build();
+				.withLocalFolder(this.localFolder.getRoot()).build();
 		VagrantVmConfig vmConfig = VagrantVmConfig.Builder.create()
 				.withLucid32Box().build();
 		VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfig.Builder
@@ -51,10 +51,10 @@ public class VagrantFolderTemplateTest {
 
 	@Test
 	public void testFolderUriTemplates() throws IOException {
-		this.localeFolder.newFile("file.tmp");
+		this.localFolder.newFile("file.tmp");
 		VagrantFolderTemplateConfigurationURL folderTemplateConfiguration = VagrantFolderTemplateConfigurationURL.Builder
 				.create().withPathInVagrantFolder("testFolder")
-				.withUrlTemplate(this.localeFolder.getRoot().toURI()).build();
+				.withUrlTemplate(this.localFolder.getRoot().toURI()).build();
 		VagrantVmConfig vmConfig = VagrantVmConfig.Builder.create()
 				.withLucid32Box().build();
 		VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfig.Builder
