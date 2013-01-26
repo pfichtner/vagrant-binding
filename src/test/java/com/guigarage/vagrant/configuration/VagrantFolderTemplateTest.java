@@ -71,8 +71,8 @@ public class VagrantFolderTemplateTest {
 					.withUrlTemplate(localeFolder.toURI()).build();
 			VagrantVmConfig vmConfig = VagrantVmConfig.Builder.create()
 					.withLucid32Box().build();
-			VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfig.Builder.create()
-					.withVagrantVmConfig(vmConfig).build();
+			VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfig.Builder
+					.create().withVagrantVmConfig(vmConfig).build();
 			VagrantConfiguration vagrantConfiguration = Builder
 					.create()
 					.withVagrantEnvironmentConfig(environmentConfig)
@@ -101,12 +101,13 @@ public class VagrantFolderTemplateTest {
 		File vagrantPath = new File(FileUtils.getTempDirectory(), UUID
 				.randomUUID().toString());
 		try {
-			VagrantVmConfig vmConfig = VagrantVmConfig.Builder.create().withLucid32Box()
+			VagrantVmConfig vmConfig = VagrantVmConfig.Builder.create()
+					.withLucid32Box().build();
+			VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfig.Builder
+					.create().withVagrantVmConfig(vmConfig).build();
+			VagrantConfiguration vagrantConfiguration = VagrantConfiguration.Builder
+					.create().withVagrantEnvironmentConfig(environmentConfig)
 					.build();
-			VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfig.Builder.create()
-					.withVagrantVmConfig(vmConfig).build();
-			VagrantConfiguration vagrantConfiguration = Builder.create()
-					.withVagrantEnvironmentConfig(environmentConfig).build();
 
 			new Vagrant(true).createEnvironment(vagrantPath,
 					vagrantConfiguration);
@@ -115,9 +116,10 @@ public class VagrantFolderTemplateTest {
 		}
 	}
 
-	@Test(expected = VagrantBuilderException.class)
+	@Test(expected = IllegalStateException.class)
 	public void testBuilderWithoutFolderTemplates() {
-		VagrantFolderTemplateConfiguration.Builder.create().withPathInVagrantFolder("testFolder")
+		VagrantFolderTemplateConfiguration.Builder.create()
+				.withPathInVagrantFolder("testFolder")
 				.withLocalFolder((File) null).build();
 	}
 

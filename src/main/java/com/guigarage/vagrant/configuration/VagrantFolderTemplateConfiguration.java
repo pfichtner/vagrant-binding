@@ -1,6 +1,8 @@
 package com.guigarage.vagrant.configuration;
 
 import java.io.File;
+
+import static com.guigarage.vagrant.configuration.Preconditions.*;
 import java.net.URI;
 
 import lombok.Getter;
@@ -34,7 +36,7 @@ public class VagrantFolderTemplateConfiguration {
 	 * local path for the template folder
 	 * 
 	 * @param localFile
-	 *            locale path of the template folder
+	 *            local path of the template folder
 	 * @param pathInVagrantFolder
 	 *            path in Vagrant folder where the template should be copied
 	 */
@@ -60,14 +62,11 @@ public class VagrantFolderTemplateConfiguration {
 		private URI withUrlTemplate;
 
 		public VagrantFolderTemplateConfiguration build() {
-			if (this.withLocalFolder == null && this.withUrlTemplate == null) {
-				throw new VagrantBuilderException(
-						"localFolder or uriTemplate need to be specified");
-			}
-			if (this.withPathInVagrantFolder == null) {
-				throw new VagrantBuilderException(
-						"pathInVagrantFolder need to be specified");
-			}
+			checkState(this.withLocalFolder != null
+					|| this.withUrlTemplate != null,
+					"localFolder or uriTemplate need to be specified");
+			checkState(this.withPathInVagrantFolder != null,
+					"pathInVagrantFolder need to be specified");
 			if (this.withLocalFolder != null) {
 				return new VagrantFolderTemplateConfiguration(
 						this.withLocalFolder, this.withPathInVagrantFolder);

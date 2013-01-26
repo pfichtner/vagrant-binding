@@ -1,5 +1,7 @@
 package com.guigarage.vagrant.configuration;
 
+import static com.guigarage.vagrant.configuration.Preconditions.checkState;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +78,7 @@ public class VagrantVmConfig {
 	}
 
 	private VagrantVmConfig(Builder builder) {
+		checkState(builder.withBoxName != null, "No boxName defined");
 		this.name = builder.withName;
 		this.hostOnlyIp = builder.withHostOnlyIp;
 		this.hostName = builder.withHostName;
@@ -129,9 +132,6 @@ public class VagrantVmConfig {
 		}
 
 		public VagrantVmConfig build() {
-			if (this.withBoxName == null) {
-				throw new VagrantBuilderException("No boxName defined");
-			}
 			return new VagrantVmConfig(this);
 		}
 

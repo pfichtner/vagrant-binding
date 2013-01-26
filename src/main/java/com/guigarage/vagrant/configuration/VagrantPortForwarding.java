@@ -1,8 +1,8 @@
 package com.guigarage.vagrant.configuration;
 
+import static com.guigarage.vagrant.configuration.Preconditions.checkState;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -22,6 +22,8 @@ public class VagrantPortForwarding {
 	private final int hostPort;
 
 	private VagrantPortForwarding(Builder builder) {
+		checkState(builder.withGuestPort >= 0, "no guestport defined");
+		checkState(builder.withHostPort >= 0, "no hostport defined");
 		this.name = builder.withName;
 		this.guestPort = builder.withGuestPort;
 		this.hostPort = builder.withHostPort;
@@ -39,12 +41,6 @@ public class VagrantPortForwarding {
 		private String withName;
 
 		public VagrantPortForwarding build() {
-			if (this.withGuestPort < 0) {
-				throw new VagrantBuilderException("no guestport defined");
-			}
-			if (this.withHostPort < 0) {
-				throw new VagrantBuilderException("no hostport defined");
-			}
 			return new VagrantPortForwarding(this);
 		}
 

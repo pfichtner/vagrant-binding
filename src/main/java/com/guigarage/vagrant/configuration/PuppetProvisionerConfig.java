@@ -1,5 +1,6 @@
 package com.guigarage.vagrant.configuration;
 
+import static com.guigarage.vagrant.configuration.Preconditions.checkNotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,8 +26,10 @@ public class PuppetProvisionerConfig {
 
 	private PuppetProvisionerConfig(Builder builder) {
 		this.debug = builder.withDebug;
-		this.manifestsPath = builder.withManifestPath;
-		this.manifestFile = builder.withManifestFile;
+		this.manifestsPath = checkNotNull(builder.withManifestPath,
+				"no manifestPath defined!");
+		this.manifestFile = checkNotNull(builder.withManifestFile,
+				"no manifestFile defined!");
 		this.modulesPath = builder.withModulesPath;
 	}
 
@@ -50,12 +53,6 @@ public class PuppetProvisionerConfig {
 		private String withModulesPath;
 
 		public PuppetProvisionerConfig build() {
-			if (this.withManifestPath == null) {
-				throw new VagrantBuilderException("no manifestPath defined!");
-			}
-			if (this.withManifestFile == null) {
-				throw new VagrantBuilderException("no manifestFile defined!");
-			}
 			return new PuppetProvisionerConfig(this);
 		}
 

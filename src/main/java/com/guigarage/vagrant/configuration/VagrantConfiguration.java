@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import static com.guigarage.vagrant.configuration.Preconditions.*;
 
 /**
  * Global configuration for a Vagrant environment that uses
@@ -25,10 +26,11 @@ public class VagrantConfiguration {
 	private final List<VagrantFolderTemplateConfiguration> folderTemplateConfigurations = new ArrayList<VagrantFolderTemplateConfiguration>();
 
 	public VagrantConfiguration(
-			VagrantEnvironmentConfig environmentConfig,
+			VagrantEnvironmentConfig vagrantEnvironmentConfig,
 			Iterable<VagrantFileTemplateConfiguration> fileTemplateConfigurations,
 			Iterable<VagrantFolderTemplateConfiguration> folderTemplateConfigurations) {
-		this.environmentConfig = environmentConfig;
+		this.environmentConfig = checkNotNull(vagrantEnvironmentConfig,
+				"No VagrantEnvironmentConfig defined");
 		for (VagrantFileTemplateConfiguration fileTemplateConfiguration : fileTemplateConfigurations) {
 			this.fileTemplateConfigurations.add(fileTemplateConfiguration);
 		}
@@ -67,10 +69,6 @@ public class VagrantConfiguration {
 		}
 
 		public VagrantConfiguration build() {
-			if (this.withVagrantEnvironmentConfig == null) {
-				throw new VagrantBuilderException(
-						"No VagrantEnvironmentConfig defined");
-			}
 			return new VagrantConfiguration(this);
 		}
 

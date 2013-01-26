@@ -5,6 +5,7 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import static com.guigarage.vagrant.configuration.Preconditions.*;
 
 /**
  * Holds the configuration of a Vagrant environment.
@@ -27,6 +28,8 @@ public class VagrantEnvironmentConfig {
 	}
 
 	private VagrantEnvironmentConfig(Builder builder) {
+		checkState(!checkNotNull(builder.vmConfigs, "No vm defined").isEmpty(),
+				"No vm defined");
 		this.vmConfigs = new ArrayList<VagrantVmConfig>(builder.vmConfigs);
 	}
 
@@ -52,9 +55,6 @@ public class VagrantEnvironmentConfig {
 		}
 
 		public VagrantEnvironmentConfig build() {
-			if (this.vmConfigs.isEmpty()) {
-				throw new VagrantBuilderException("No vm defined");
-			}
 			return new VagrantEnvironmentConfig(this);
 		}
 	}
