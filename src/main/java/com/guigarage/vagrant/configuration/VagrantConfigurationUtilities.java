@@ -114,28 +114,34 @@ public final class VagrantConfigurationUtilities {
 	}
 
 	private static void appendPuppetProvisionerConfig(StringBuilder builder,
-			String vmConfigName, PuppetProvisionerConfig puppetProvisionerConfig) {
-		if (puppetProvisionerConfig != null) {
+			String vmConfigName, PuppetProvisionerConfig ppc) {
+		if (ppc != null) {
 			builder.append(vmConfigName + ".vm.provision :puppet do |puppet|")
 					.append("\n");
 			builder.append(
-					"puppet.manifests_path = \""
-							+ puppetProvisionerConfig.getManifestsPath() + "\"")
-					.append("\n");
+					"puppet.manifests_path = \"" + ppc.getManifestsPath()
+							+ "\"").append("\n");
 			builder.append(
-					"puppet.manifest_file  = \""
-							+ puppetProvisionerConfig.getManifestFile() + "\"")
+					"puppet.manifest_file  = \"" + ppc.getManifestFile() + "\"")
 					.append("\n");
 
-			String modulesPath = puppetProvisionerConfig.getModulesPath();
+			String modulesPath = ppc.getModulesPath();
 			if (modulesPath != null) {
 				builder.append("puppet.module_path  = \"" + modulesPath + "\"")
 						.append("\n");
 			}
 
-			boolean debug = puppetProvisionerConfig.isDebug();
+			boolean debug = ppc.isDebug();
 			if (debug) {
 				builder.append("puppet.options  = \"--verbose --debug\"")
+						.append("\n");
+			}
+
+			// http://stackoverflow.com/questions/13065576/override-vagrant-configuration-settings-locally-per-dev
+			String proxy = ppc.getProxy();
+			if (proxy != null) {
+				builder.append(
+						"puppet.facter = { \"proxy\" => \"" + proxy + "\" }")
 						.append("\n");
 			}
 

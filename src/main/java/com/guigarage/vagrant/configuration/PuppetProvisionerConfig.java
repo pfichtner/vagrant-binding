@@ -25,6 +25,8 @@ public class PuppetProvisionerConfig {
 
 	private final String modulesPath;
 
+	private final String proxy;
+
 	private PuppetProvisionerConfig(Builder builder) {
 		this.debug = builder.withDebug;
 		this.manifestsPath = checkNotNull(builder.withManifestPath,
@@ -32,6 +34,7 @@ public class PuppetProvisionerConfig {
 		this.manifestFile = checkNotNull(builder.withManifestFile,
 				"no manifestFile defined!");
 		this.modulesPath = builder.withModulesPath;
+		this.proxy = builder.withProxy;
 	}
 
 	public static Builder builder() {
@@ -56,6 +59,8 @@ public class PuppetProvisionerConfig {
 		private boolean withDebug;
 
 		private String withModulesPath;
+
+		private String withProxy;
 
 		public PuppetProvisionerConfig build() {
 			return new PuppetProvisionerConfig(this);
