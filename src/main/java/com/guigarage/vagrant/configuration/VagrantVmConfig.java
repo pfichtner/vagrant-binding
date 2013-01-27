@@ -1,11 +1,12 @@
 package com.guigarage.vagrant.configuration;
 
-import static com.guigarage.vagrant.util.Preconditions.*;
+import static com.guigarage.vagrant.util.Preconditions.checkNotNull;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,19 +26,19 @@ public class VagrantVmConfig {
 
 	private List<VagrantPortForwarding> portForwardings = new ArrayList<VagrantPortForwarding>();
 
-	private PuppetProvisionerConfig puppetProvisionerConfig;
+	private final PuppetProvisionerConfig puppetProvisionerConfig;
 
-	private String name;
+	private final String name;
 
-	private String hostOnlyIp;
+	private final String hostOnlyIp;
 
-	private String boxName;
+	private final String boxName;
 
-	private URL boxUrl;
+	private final URL boxUrl;
 
-	private String hostName;
+	private final String hostName;
 
-	private boolean guiMode;
+	private final boolean guiMode;
 
 	/**
 	 * Constructs a configuration.
@@ -89,7 +90,11 @@ public class VagrantVmConfig {
 		this.guiMode = builder.withGuiMode;
 	}
 
-	@NoArgsConstructor(staticName = "create")
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	@Accessors(fluent = true, chain = true)
 	@Setter
 	public static class Builder {

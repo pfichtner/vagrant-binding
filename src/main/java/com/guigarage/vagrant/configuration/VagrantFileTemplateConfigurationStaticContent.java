@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,8 +31,12 @@ public class VagrantFileTemplateConfigurationStaticContent extends
 	protected InputStream getInputStream() throws IOException {
 		return new ByteArrayInputStream(this.content.getBytes());
 	}
+	
+	public static Builder builder() {
+		return new Builder();
+	}
 
-	@NoArgsConstructor(staticName = "create")
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	@Accessors(fluent = true, chain = true, prefix = "with")
 	@Setter
 	public static class Builder {

@@ -1,13 +1,18 @@
 package com.guigarage.vagrant.configuration;
 
+import static com.guigarage.vagrant.util.Preconditions.checkNotNull;
+import static com.guigarage.vagrant.util.Preconditions.checkState;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.guigarage.vagrant.util.Iterables;
-
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import static com.guigarage.vagrant.util.Preconditions.*;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
+import com.guigarage.vagrant.util.Iterables;
 
 /**
  * Holds the configuration of a Vagrant environment.
@@ -44,10 +49,16 @@ public class VagrantEnvironmentConfig {
 		return this.vmConfigs.size() > 1;
 	}
 
-	@NoArgsConstructor(staticName = "create")
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
+	@Accessors(fluent = true, chain = true)
+	@Setter
 	public static class Builder {
 
-		private List<VagrantVmConfig> vmConfigs = new ArrayList<VagrantVmConfig>();
+		private final List<VagrantVmConfig> vmConfigs = new ArrayList<VagrantVmConfig>();
 
 		public Builder withVagrantVmConfig(VagrantVmConfig vmConfig) {
 			this.vmConfigs.add(vmConfig);

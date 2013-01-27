@@ -19,11 +19,13 @@ import org.apache.commons.io.IOUtils;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class VagrantUtils {
 
-	@Getter(lazy = true)
-	private final URL lucid64Url = createUrl("http://files.vagrantup.com/lucid64.box");
+	private static final String VAGRANT_BASE = "http://files.vagrantup.com/";
 
 	@Getter(lazy = true)
-	private final URL lucid32Url = createUrl("http://files.vagrantup.com/lucid32.box");
+	private final URL lucid32Url = createUrl(VAGRANT_BASE + "lucid32.box");
+
+	@Getter(lazy = true)
+	private final URL lucid64Url = createUrl(VAGRANT_BASE + "lucid64.box");
 
 	private static URL createUrl(String url) {
 		try {
@@ -54,10 +56,10 @@ public final class VagrantUtils {
 		if (url == null) {
 			url = ClassLoader.getSystemResource(path);
 		}
-		if (url == null) {
-			throw new IOException("Can't create URL for path " + path);
+		if (url != null) {
+			return url;
 		}
-		return url;
+		throw new IOException("Can't create URL for path " + path);
 	}
 
 	/**

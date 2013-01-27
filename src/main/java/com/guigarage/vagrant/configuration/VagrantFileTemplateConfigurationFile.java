@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,7 +41,11 @@ public class VagrantFileTemplateConfigurationFile extends
 		return new FileInputStream(this.localFile);
 	}
 
-	@NoArgsConstructor(staticName = "create")
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	@Accessors(fluent = true, chain = true, prefix = "with")
 	@Setter
 	public static class Builder {

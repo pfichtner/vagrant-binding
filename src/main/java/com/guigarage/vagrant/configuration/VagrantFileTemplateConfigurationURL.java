@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,7 +40,11 @@ public class VagrantFileTemplateConfigurationURL extends
 		return this.urlTemplate.openStream();
 	}
 
-	@NoArgsConstructor(staticName = "create")
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	@Accessors(fluent = true, chain = true)
 	@Setter
 	public static class Builder {

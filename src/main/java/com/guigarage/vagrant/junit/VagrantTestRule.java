@@ -2,8 +2,10 @@ package com.guigarage.vagrant.junit;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
+
+import lombok.Getter;
+import lombok.Synchronized;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
@@ -31,7 +33,8 @@ public class VagrantTestRule extends TestWatcher {
 
 	private VagrantEnvironment environment;
 
-	private File vagrantDir;
+	@Getter
+	private final File vagrantDir;
 
 	/**
 	 * The VagrantTestRule will use the given {@link VagrantEnvironmentConfig}
@@ -93,8 +96,8 @@ public class VagrantTestRule extends TestWatcher {
 		}
 	}
 
-	private synchronized void init(String vagrantfileName,
-			String vagrantfileContent) {
+	@Synchronized
+	private void init(String vagrantfileName, String vagrantfileContent) {
 		File vagrantFile = new File(this.vagrantDir, vagrantfileName);
 		try {
 			FileUtils.writeStringToFile(vagrantFile, vagrantfileContent, false);
@@ -107,14 +110,16 @@ public class VagrantTestRule extends TestWatcher {
 	}
 
 	@Override
-	protected synchronized void starting(Description description) {
+	@Synchronized
+	protected void starting(Description description) {
 		super.starting(description);
 		this.environment.destroy();
 		this.environment.up();
 	}
 
 	@Override
-	protected synchronized void finished(Description description) {
+	@Synchronized
+	protected void finished(Description description) {
 		super.finished(description);
 		this.environment.destroy();
 		clean();
@@ -130,14 +135,16 @@ public class VagrantTestRule extends TestWatcher {
 		return this.environment;
 	}
 
-	private synchronized void clean() {
+	@Synchronized
+	private void clean() {
 		try {
 			FileUtils.forceDelete(this.vagrantDir);
 		} catch (Exception e) {
 			try {
 				FileUtils.forceDeleteOnExit(this.vagrantDir);
 			} catch (Exception e2) {
-				throw new VagrantException("Can't clean Vagrantfolder", e2);
+				throw new VagrantException("Can't clean Vagrantfolder "
+						+ this.vagrantDir, e2);
 			}
 		}
 	}

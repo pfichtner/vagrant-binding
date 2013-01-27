@@ -1,11 +1,12 @@
 package com.guigarage.vagrant.configuration;
 
-import static com.guigarage.vagrant.util.Preconditions.*;
+import static com.guigarage.vagrant.util.Preconditions.checkNotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class VagrantFolderTemplateConfigurationURL implements
 		VagrantFileProvider {
 
 	private final URI uriTemplate;
-	
+
 	private final String pathInVagrantFolder;
 
 	public VagrantFolderTemplateConfigurationURL(Builder builder) {
@@ -37,7 +38,11 @@ public class VagrantFolderTemplateConfigurationURL implements
 				vagrantFolder, getPathInVagrantFolder()));
 	}
 
-	@NoArgsConstructor(staticName = "create")
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	@Accessors(fluent = true, chain = true)
 	@Setter
 	public static class Builder {

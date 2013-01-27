@@ -1,6 +1,7 @@
 package com.guigarage.vagrant.configuration;
 
 import static com.guigarage.vagrant.util.Preconditions.checkNotNull;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,13 +34,17 @@ public class PuppetProvisionerConfig {
 		this.modulesPath = builder.withModulesPath;
 	}
 
+	public static Builder builder() {
+		return new Builder();
+	}
+
 	/**
 	 * Builder for {@link PuppetProvisionerConfig}
 	 * 
 	 * @author hendrikebbers
 	 * @author Peter Fichtner
 	 */
-	@NoArgsConstructor(staticName = "create")
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	@Accessors(fluent = true, chain = true)
 	@Setter
 	public static class Builder {

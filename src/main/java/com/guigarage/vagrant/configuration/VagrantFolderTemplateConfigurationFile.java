@@ -5,6 +5,7 @@ import static com.guigarage.vagrant.util.Preconditions.checkNotNull;
 import java.io.File;
 import java.io.IOException;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class VagrantFolderTemplateConfigurationFile implements
 	private final File localFolder;
 
 	private final String pathInVagrantFolder;
-	
+
 	public VagrantFolderTemplateConfigurationFile(Builder builder) {
 		this.localFolder = checkNotNull(builder.withLocalFolder,
 				"localFolder need to be specified");
@@ -36,7 +37,11 @@ public class VagrantFolderTemplateConfigurationFile implements
 				getPathInVagrantFolder()));
 	}
 
-	@NoArgsConstructor(staticName = "create")
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	@Accessors(fluent = true, chain = true)
 	@Setter
 	public static class Builder {

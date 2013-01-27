@@ -1,9 +1,9 @@
 package com.guigarage.vagrant.junit;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Rule;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 import com.guigarage.vagrant.util.VagrantUtils;
 
@@ -15,8 +15,8 @@ public class RuleTest {
 
 	@Test
 	public void testDummy() {
-		assertEquals(true, this.testRule.getEnvironment().getAllVms()
-				.iterator().next().isRunning());
+		assertTrue(this.testRule.getEnvironment().getAllVms().iterator().next()
+				.isRunning());
 	}
 
 }

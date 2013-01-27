@@ -13,7 +13,6 @@ import com.guigarage.vagrant.util.VagrantException;
  * and acces the VM by SSH.
  * 
  * @author hendrikebbers
- * @author Peter Fichtner
  */
 @RequiredArgsConstructor
 public class VagrantVm {
@@ -76,18 +75,18 @@ public class VagrantVm {
 	}
 
 	/**
-	 * Returns true if the VM is created.
+	 * Returns <code>true</code> if the VM is created.
 	 * 
-	 * @return true if the VM is created.
+	 * @return <code>true</code> if the VM is created.
 	 */
 	public boolean isCreated() {
 		return !isState("not_created");
 	}
 
 	/**
-	 * Returns true if the VM is paused.
+	 * Returns <code>true</code> if the VM is paused.
 	 * 
-	 * @return true if the VM is paused.
+	 * @return <code>true</code> if the VM is paused.
 	 */
 	public boolean isPaused() {
 		return isState("saved");

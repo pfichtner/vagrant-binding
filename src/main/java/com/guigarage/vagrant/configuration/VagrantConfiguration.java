@@ -5,6 +5,7 @@ import static com.guigarage.vagrant.util.Preconditions.checkNotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -46,7 +47,11 @@ public class VagrantConfiguration {
 				builder.folderTemplateConfigurations);
 	}
 
-	@NoArgsConstructor(staticName = "create")
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	@Accessors(fluent = true, chain = true)
 	@Setter
 	public static class Builder {

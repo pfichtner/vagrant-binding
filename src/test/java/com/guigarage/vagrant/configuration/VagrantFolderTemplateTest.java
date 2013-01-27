@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import com.guigarage.vagrant.Vagrant;
-import com.guigarage.vagrant.configuration.VagrantConfiguration.Builder;
 import com.guigarage.vagrant.model.VagrantEnvironment;
 
 public class VagrantFolderTemplateTest {
@@ -24,15 +23,15 @@ public class VagrantFolderTemplateTest {
 	@Test
 	public void testFolderTemplates() throws IOException {
 		this.localFolder.newFile("file.tmp");
-		VagrantFolderTemplateConfigurationFile folderTemplateConfiguration = VagrantFolderTemplateConfigurationFile.Builder
-				.create().withPathInVagrantFolder("testFolder")
+		VagrantFolderTemplateConfigurationFile folderTemplateConfiguration = VagrantFolderTemplateConfigurationFile
+				.builder().withPathInVagrantFolder("testFolder")
 				.withLocalFolder(this.localFolder.getRoot()).build();
-		VagrantVmConfig vmConfig = VagrantVmConfig.Builder.create()
-				.withLucid32Box().build();
-		VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfig.Builder
-				.create().withVagrantVmConfig(vmConfig).build();
-		VagrantConfiguration vagrantConfiguration = Builder
-				.create()
+		VagrantVmConfig vmConfig = VagrantVmConfig.builder().withLucid32Box()
+				.build();
+		VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfig
+				.builder().withVagrantVmConfig(vmConfig).build();
+		VagrantConfiguration vagrantConfiguration = VagrantConfiguration
+				.builder()
 				.withVagrantEnvironmentConfig(environmentConfig)
 				.withVagrantFolderTemplateConfiguration(
 						folderTemplateConfiguration).build();
@@ -52,23 +51,22 @@ public class VagrantFolderTemplateTest {
 	@Test
 	public void testFolderUriTemplates() throws IOException {
 		this.localFolder.newFile("file.tmp");
-		VagrantFolderTemplateConfigurationURL folderTemplateConfiguration = VagrantFolderTemplateConfigurationURL.Builder
-				.create().withPathInVagrantFolder("testFolder")
+		VagrantFolderTemplateConfigurationURL folderTemplateConfiguration = VagrantFolderTemplateConfigurationURL
+				.builder().withPathInVagrantFolder("testFolder")
 				.withUrlTemplate(this.localFolder.getRoot().toURI()).build();
-		VagrantVmConfig vmConfig = VagrantVmConfig.Builder.create()
-				.withLucid32Box().build();
-		VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfig.Builder
-				.create().withVagrantVmConfig(vmConfig).build();
-		VagrantConfiguration vagrantConfiguration = Builder
-				.create()
+		VagrantVmConfig vmConfig = VagrantVmConfig.builder().withLucid32Box()
+				.build();
+		VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfig
+				.builder().withVagrantVmConfig(vmConfig).build();
+		VagrantConfiguration vagrantConfiguration = VagrantConfiguration
+				.builder()
 				.withVagrantEnvironmentConfig(environmentConfig)
 				.withVagrantFolderTemplateConfiguration(
 						folderTemplateConfiguration).build();
 
 		Vagrant vagrant = new Vagrant(true);
-		VagrantEnvironment environment = null;
-		environment = vagrant.createEnvironment(this.vagrantPath.getRoot(),
-				vagrantConfiguration);
+		VagrantEnvironment environment = vagrant.createEnvironment(
+				this.vagrantPath.getRoot(), vagrantConfiguration);
 		File vagrantFolder = new File(environment.getRootPath());
 		File createdFolder = new File(vagrantFolder, "testFolder");
 		assertTrue(createdFolder.exists());
@@ -80,12 +78,12 @@ public class VagrantFolderTemplateTest {
 
 	@Test
 	public void testWithoutFolderTemplates() throws IOException {
-		VagrantVmConfig vmConfig = VagrantVmConfig.Builder.create()
-				.withLucid32Box().build();
-		VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfig.Builder
-				.create().withVagrantVmConfig(vmConfig).build();
-		VagrantConfiguration vagrantConfiguration = VagrantConfiguration.Builder
-				.create().withVagrantEnvironmentConfig(environmentConfig)
+		VagrantVmConfig vmConfig = VagrantVmConfig.builder().withLucid32Box()
+				.build();
+		VagrantEnvironmentConfig environmentConfig = VagrantEnvironmentConfig
+				.builder().withVagrantVmConfig(vmConfig).build();
+		VagrantConfiguration vagrantConfiguration = VagrantConfiguration
+				.builder().withVagrantEnvironmentConfig(environmentConfig)
 				.build();
 
 		new Vagrant(true).createEnvironment(this.vagrantPath.getRoot(),
@@ -94,7 +92,7 @@ public class VagrantFolderTemplateTest {
 
 	@Test(expected = NullPointerException.class)
 	public void testBuilderWithoutFolderTemplates() {
-		VagrantFolderTemplateConfigurationFile.Builder.create()
+		VagrantFolderTemplateConfigurationFile.builder()
 				.withPathInVagrantFolder("testFolder")
 				.withLocalFolder((File) null).build();
 	}
