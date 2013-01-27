@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
  * creates configurationfiles for Vagrant.
  * 
  * @author hendrikebbers
- * 
+ * @author Peter Fichtner
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class VagrantConfigurationUtilities {
@@ -25,14 +25,14 @@ public final class VagrantConfigurationUtilities {
 		// erstellen und so primaryVm etc. nutzen...
 
 		for (VagrantVmConfig vmConfig : config.getVmConfigs()) {
-			builder.append(createVmInMultiEnvConfig(vmConfig));
+			appendVmInMultiEnvConfig(builder, vmConfig);
 		}
 		builder.append("end").append("\n");
 		return builder.toString();
 	}
 
-	private static String createVmInMultiEnvConfig(VagrantVmConfig vmConfig) {
-		StringBuilder builder = new StringBuilder();
+	private static void appendVmInMultiEnvConfig(StringBuilder builder,
+			VagrantVmConfig vmConfig) {
 		String vmName = vmConfig.getName();
 		if (vmName == null) {
 			vmName = UUID.randomUUID().toString();
@@ -43,107 +43,78 @@ public final class VagrantConfigurationUtilities {
 
 		for (VagrantPortForwarding portForwarding : vmConfig
 				.getPortForwardings()) {
-			builder.append(createPortForwardingConfig(vmName + "_config",
-					portForwarding));
-		}
-		builder.append(createBoxNameConfig(vmName + "_config",
-				vmConfig.getBoxName()));
-
-		URL boxUrl = vmConfig.getBoxUrl();
-		if (boxUrl != null) {
-			builder.append(createBoxUrlConfig(vmName + "_config", boxUrl));
+			appendPortForwardingConfig(builder, vmName + "_config",
+					portForwarding);
 		}
 
-		String ip = vmConfig.getHostOnlyIp();
-		if (ip != null) {
-			builder.append(createHostOnlyIpConfig(vmName + "_config", ip));
-		}
+		appendBoxNameConfig(builder, vmName + "_config", vmConfig.getBoxName());
+		appendBoxUrlConfig(builder, vmName + "_config", vmConfig.getBoxUrl());
+		appendHostOnlyIpConfig(builder, vmName + "_config",
+				vmConfig.getHostOnlyIp());
 
-		boolean guiMode = vmConfig.isGuiMode();
-		if (guiMode) {
-			builder.append(createGuiModeConfig(vmName + "_config"));
+		if (vmConfig.isGuiMode()) {
+			appendGuiModeConfig(builder, vmName + "_config");
 		}
-
-		String hostName = vmConfig.getHostName();
-		if (hostName != null) {
-			builder.append(createHostNameConfig(vmName + "_config", hostName));
-		}
+		appendHostNameConfig(builder, vmName + "_config",
+				vmConfig.getHostName());
 
 		PuppetProvisionerConfig puppetProvisionerConfig = vmConfig
 				.getPuppetProvisionerConfig();
-		if (puppetProvisionerConfig != null) {
-			builder.append(createPuppetProvisionerConfig(vmName + "_config",
-					puppetProvisionerConfig));
-		}
+		appendPuppetProvisionerConfig(builder, vmName + "_config",
+				puppetProvisionerConfig);
 		builder.append("end").append("\n");
-		return builder.toString();
 	}
 
-	private static String createPortForwardingConfig(String vmConfigName,
-			VagrantPortForwarding portForwarding) {
-		StringBuilder builder = new StringBuilder();
+	private static void appendPortForwardingConfig(StringBuilder builder,
+			String vmConfigName, VagrantPortForwarding portForwarding) {
 		String portForwardingName = portForwarding.getName();
+		builder.append(vmConfigName).append(".vm.forward_port ");
 		if (portForwardingName != null) {
-			builder.append(
-					vmConfigName + ".vm.forward_port \"" + portForwardingName
-							+ "\", " + portForwarding.getGuestPort() + ", "
-							+ portForwarding.getHostPort()).append("\n");
-		} else {
-			builder.append(
-					vmConfigName + ".vm.forward_port "
-							+ portForwarding.getGuestPort() + ", "
-							+ portForwarding.getHostPort()).append("\n");
+			builder.append("\"").append(portForwardingName).append("\", ");
 		}
-		return builder.toString();
+		builder.append(portForwarding.getGuestPort()).append(", ")
+				.append(portForwarding.getHostPort()).append("\n");
 	}
 
-	private static String createBoxNameConfig(String vmConfigName,
-			String boxName) {
-		StringBuilder builder = new StringBuilder();
-		builder.append(vmConfigName + ".vm.box = \"" + boxName + "\"").append(
-				"\n");
-		return builder.toString();
+	private static void appendBoxNameConfig(StringBuilder builder,
+			String vmConfigName, String boxName) {
+		builder.append(vmConfigName);
+		builder.append(".vm.box = \"").append(boxName).append("\"")
+				.append("\n");
 	}
 
-	private static String createHostNameConfig(String vmConfigName,
-			String hostName) {
-		StringBuilder builder = new StringBuilder();
+	private static void appendHostNameConfig(StringBuilder builder,
+			String vmConfigName, String hostName) {
 		if (hostName != null) {
-			builder.append(
-					vmConfigName + ".vm.host_name = \"" + hostName + ".local\"")
-					.append("\n");
+			builder.append(vmConfigName).append(".vm.host_name = \"")
+					.append(hostName).append(".local\"").append("\n");
 		}
-		return builder.toString();
 	}
 
-	private static String createBoxUrlConfig(String vmConfigName, URL boxUrl) {
-		StringBuilder builder = new StringBuilder();
+	private static void appendBoxUrlConfig(StringBuilder builder,
+			String vmConfigName, URL boxUrl) {
 		if (boxUrl != null) {
-			builder.append(vmConfigName + ".vm.box_url = \"" + boxUrl + "\"")
-					.append("\n");
+			builder.append(vmConfigName).append(".vm.box_url = \"")
+					.append(boxUrl).append("\"").append("\n");
 		}
-		return builder.toString();
 	}
 
-	private static String createHostOnlyIpConfig(String vmConfigName, String ip) {
-		StringBuilder builder = new StringBuilder();
+	private static void appendHostOnlyIpConfig(StringBuilder builder,
+			String vmConfigName, String ip) {
 		if (ip != null) {
-			builder.append(
-					vmConfigName + ".vm.network :hostonly, \"" + ip + "\"")
-					.append("\n");
+			builder.append(vmConfigName).append(".vm.network :hostonly, \"")
+					.append(ip).append("\"").append("\n");
 		}
-		return builder.toString();
 	}
 
-	private static String createGuiModeConfig(String vmConfigName) {
-		StringBuilder builder = new StringBuilder();
-		builder.append(vmConfigName + ".vm.boot_mode = :gui").append("\n");
-		return builder.toString();
+	private static void appendGuiModeConfig(StringBuilder builder,
+			String vmConfigName) {
+		builder.append(vmConfigName).append(".vm.boot_mode = :gui")
+				.append("\n");
 	}
 
-	private static String createPuppetProvisionerConfig(String vmConfigName,
-			PuppetProvisionerConfig puppetProvisionerConfig) {
-		StringBuilder builder = new StringBuilder();
+	private static void appendPuppetProvisionerConfig(StringBuilder builder,
+			String vmConfigName, PuppetProvisionerConfig puppetProvisionerConfig) {
 		if (puppetProvisionerConfig != null) {
 			builder.append(vmConfigName + ".vm.provision :puppet do |puppet|")
 					.append("\n");
@@ -170,6 +141,6 @@ public final class VagrantConfigurationUtilities {
 
 			builder.append("end").append("\n");
 		}
-		return builder.toString();
 	}
+
 }
