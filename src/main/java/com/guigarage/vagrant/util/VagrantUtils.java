@@ -63,10 +63,12 @@ public final class VagrantUtils {
 	}
 
 	/**
-	 * Returns a basic Vagrantfile that uses the lucid32 box as template
+	 * Returns a basic Vagrantfile that uses the lucid32 box as template.
 	 * 
 	 * @return the content of the Vagrantfile as String
+	 * @deprecated Really used!? Only refereed by TestCases
 	 */
+	@Deprecated
 	public String getLucid32MasterContent() {
 		try {
 			return IOUtils
@@ -80,7 +82,9 @@ public final class VagrantUtils {
 	 * Returns a basic Vagrantfile that uses the lucid64 box as template.
 	 * 
 	 * @return the content of the Vagrantfile as String
+	 * @deprecated Really used!? Only refereed by TestCases
 	 */
+	@Deprecated
 	public String getLucid64MasterContent() {
 		try {
 			return IOUtils
