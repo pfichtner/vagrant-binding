@@ -42,7 +42,7 @@ public class VagrantTestRule extends TestWatcher {
 	 * for the Vagrant environment that is wrapped around the tests.
 	 * 
 	 * @param environmentConfig
-	 *            the configuration for the Vagrant enviroment.
+	 *            the configuration for the Vagrant environment.
 	 */
 	public VagrantTestRule(VagrantEnvironmentConfig environmentConfig) {
 		this(VagrantConfigurationUtilities
@@ -54,7 +54,7 @@ public class VagrantTestRule extends TestWatcher {
 	 * environment that is wrapped around the tests.
 	 * 
 	 * @param vagrantFileContent
-	 *            the content of the vagrantfile for the Vagrant enviroment.
+	 *            the content of the vagrantfile for the Vagrant environment.
 	 */
 	public VagrantTestRule(String vagrantFileContent) {
 		File tmpDir = FileUtils.getTempDirectory();
