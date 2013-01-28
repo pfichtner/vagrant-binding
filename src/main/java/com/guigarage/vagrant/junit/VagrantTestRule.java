@@ -27,7 +27,6 @@ import com.guigarage.vagrant.util.VagrantException;
  * and destroys it after the test.
  * 
  * @author hendrikebbers
- * 
  */
 public class VagrantTestRule extends TestWatcher {
 
@@ -103,7 +102,7 @@ public class VagrantTestRule extends TestWatcher {
 			FileUtils.writeStringToFile(vagrantFile, vagrantfileContent, false);
 		} catch (IOException e) {
 			throw new VagrantException("Error while creating "
-					+ this.getClass().getSimpleName(), e);
+					+ getClass().getSimpleName(), e);
 		}
 		Vagrant vagrant = new Vagrant(true);
 		this.environment = vagrant.createEnvironment(this.vagrantDir);
