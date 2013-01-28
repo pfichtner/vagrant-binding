@@ -2,6 +2,7 @@ package com.guigarage.vagrant.model;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +29,7 @@ public class VagrantEnvironment {
 	private final RubyObject vagrantEnvironment;
 
 	/**
-	 * Start all VMs in this environment
+	 * Start all VMs in this environment.
 	 */
 	public void up() {
 		try {
@@ -40,7 +41,7 @@ public class VagrantEnvironment {
 	}
 
 	/**
-	 * Adds a new box to Vagrant
+	 * Adds a new box to Vagrant.
 	 * 
 	 * @param boxName
 	 *            name of the new box
@@ -61,7 +62,7 @@ public class VagrantEnvironment {
 	}
 
 	/**
-	 * Removes a box from Vagrant
+	 * Removes a box from Vagrant.
 	 * 
 	 * @param boxName
 	 *            name of the box you want to remove
@@ -85,7 +86,7 @@ public class VagrantEnvironment {
 	 * Returns the main path to all box templates that Vagrant has installed on
 	 * your system.
 	 * 
-	 * @return
+	 * @return the main path to all box templates
 	 */
 	public String getBoxesPath() {
 		try {
@@ -98,7 +99,7 @@ public class VagrantEnvironment {
 
 	/**
 	 * Creates a simple vagrantfile / configuration for this environment. The
-	 * configuration contains only one VM that uses the given box
+	 * configuration contains only one VM that uses the given box.
 	 * 
 	 * @param boxName
 	 *            name of the box for the VM
@@ -114,9 +115,10 @@ public class VagrantEnvironment {
 	}
 
 	/**
-	 * Return true if more than one VM is configured in this environment
+	 * Return true if more than one VM is configured in this environment.
 	 * 
-	 * @return true if more than one VM is configured in this environment
+	 * @return <code>true</code> if more than one VM is configured in this
+	 *         environment
 	 */
 	public boolean isMultiVmEnvironment() {
 		try {
@@ -150,7 +152,7 @@ public class VagrantEnvironment {
 		try {
 			RubyArray boxes = (RubyArray) ((RubyObject) this.vagrantEnvironment
 					.callMethod("boxes")).getInternalVariable("@boxes");
-			ArrayList<String> ret = new ArrayList<String>();
+			List<String> ret = new ArrayList<String>(boxes.size());
 			for (Object box : boxes) {
 				ret.add(((RubyObject) box).callMethod("name").toString());
 			}
@@ -167,13 +169,13 @@ public class VagrantEnvironment {
 	 */
 	public Iterable<VagrantVm> getAllVms() {
 		try {
-			RubyArray o = (RubyArray) this.vagrantEnvironment
+			RubyArray vms = (RubyArray) this.vagrantEnvironment
 					.callMethod("vms_ordered");
-			ArrayList<VagrantVm> vms = new ArrayList<VagrantVm>();
-			for (Object vm : o) {
-				vms.add(new VagrantVm((RubyObject) vm));
+			List<VagrantVm> ret = new ArrayList<VagrantVm>(vms.size());
+			for (Object vm : vms) {
+				ret.add(new VagrantVm((RubyObject) vm));
 			}
-			return vms;
+			return ret;
 		} catch (RaiseException exception) {
 			throw new VagrantException(exception);
 		}
@@ -197,7 +199,7 @@ public class VagrantEnvironment {
 	}
 
 	/**
-	 * Returns the count of all VMs configured in this environment
+	 * Returns the count of all VMs configured in this environment.
 	 * 
 	 * @return the count of all VMs
 	 */
@@ -243,7 +245,7 @@ public class VagrantEnvironment {
 
 	/**
 	 * If this environment is a single VM environment (only contains one VM)
-	 * this methode will return the VM object.
+	 * this method will return the VM object.
 	 * 
 	 * @return the object for the VM in this environment.
 	 */
@@ -262,7 +264,7 @@ public class VagrantEnvironment {
 	}
 
 	/**
-	 * destroys the complete environment with all VMs configured and running in
+	 * Destroys the complete environment with all VMs configured and running in
 	 * it.
 	 */
 	public void destroy() {
@@ -272,4 +274,5 @@ public class VagrantEnvironment {
 			}
 		}
 	}
+
 }
