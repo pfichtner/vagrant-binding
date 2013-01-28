@@ -27,10 +27,12 @@ import com.guigarage.vagrant.util.VagrantException;
  * and destroys it after the test.
  * 
  * @author hendrikebbers
+ * @author Peter Fichtner
  */
 public class VagrantTestRule extends TestWatcher {
 
-	private VagrantEnvironment environment;
+	@Getter
+	private final VagrantEnvironment environment;
 
 	@Getter
 	private final File vagrantDir;
@@ -58,8 +60,7 @@ public class VagrantTestRule extends TestWatcher {
 		File tmpDir = FileUtils.getTempDirectory();
 		this.vagrantDir = new File(tmpDir, "vagrant-"
 				+ UUID.randomUUID().toString());
-
-		init("Vagrantfile", vagrantFileContent);
+		this.environment = init("Vagrantfile", vagrantFileContent);
 	}
 
 	/**
@@ -86,7 +87,7 @@ public class VagrantTestRule extends TestWatcher {
 				folderTemplate.copyIntoVagrantFolder(this.vagrantDir);
 			}
 
-			init("Vagrantfile",
+			this.environment = init("Vagrantfile",
 					VagrantConfigurationUtilities
 							.createVagrantFileContent(configuration
 									.getEnvironmentConfig()));
@@ -96,16 +97,15 @@ public class VagrantTestRule extends TestWatcher {
 	}
 
 	@Synchronized
-	private void init(String vagrantfileName, String vagrantfileContent) {
+	private VagrantEnvironment init(String vagrantfileName,
+			String vagrantfileContent) {
 		File vagrantFile = new File(this.vagrantDir, vagrantfileName);
 		try {
 			FileUtils.writeStringToFile(vagrantFile, vagrantfileContent, false);
 		} catch (IOException e) {
-			throw new VagrantException("Error while creating "
-					+ getClass().getSimpleName(), e);
+			throw new VagrantException("Error writing to " + vagrantFile, e);
 		}
-		Vagrant vagrant = new Vagrant(true);
-		this.environment = vagrant.createEnvironment(this.vagrantDir);
+		return new Vagrant(true).createEnvironment(this.vagrantDir);
 	}
 
 	@Override
@@ -122,16 +122,6 @@ public class VagrantTestRule extends TestWatcher {
 		super.finished(description);
 		this.environment.destroy();
 		clean();
-	}
-
-	/**
-	 * This gives you access to the VagrantEnvironment while the test is
-	 * running. You can use it to execute some commands on the VMs etc.
-	 * 
-	 * @return the created VagrantEnvironment for the current unittest
-	 */
-	public VagrantEnvironment getEnvironment() {
-		return this.environment;
 	}
 
 	@Synchronized
