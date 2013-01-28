@@ -6,6 +6,10 @@ import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import com.guigarage.vagrant.configuration.net.Bridged;
+import com.guigarage.vagrant.configuration.net.HostOnly;
+import com.guigarage.vagrant.configuration.net.Network;
+
 /**
  * Some utilities for the configuration of Vagrant environments. This class
  * creates configurationfiles for Vagrant.
@@ -50,7 +54,7 @@ public final class VagrantConfigurationUtilities {
 		appendBoxNameConfig(builder, vmName + "_config", vmConfig.getBoxName());
 		appendBoxUrlConfig(builder, vmName + "_config", vmConfig.getBoxUrl());
 		appendHostOnlyIpConfig(builder, vmName + "_config",
-				vmConfig.getHostOnlyIp());
+				vmConfig.getNetwork());
 
 		if (vmConfig.isGuiMode()) {
 			appendGuiModeConfig(builder, vmName + "_config");
@@ -100,10 +104,17 @@ public final class VagrantConfigurationUtilities {
 	}
 
 	private static void appendHostOnlyIpConfig(StringBuilder builder,
-			String vmConfigName, String ip) {
-		if (ip != null) {
+			String vmConfigName, Network network) {
+		if (network instanceof HostOnly) {
 			builder.append(vmConfigName).append(".vm.network :hostonly, \"")
-					.append(ip).append("\"").append("\n");
+					.append(((HostOnly) network).getIpAddress()).append("\"")
+					.append("\n");
+		} else if (network instanceof Bridged) {
+			builder.append(vmConfigName).append(".vm.network :bridged")
+					.append("\n");
+		} else if (network != null) {
+			throw new IllegalStateException("Unknown network mode "
+					+ network.getClass());
 		}
 	}
 
@@ -131,9 +142,8 @@ public final class VagrantConfigurationUtilities {
 						.append("\n");
 			}
 
-			boolean debug = ppc.isDebug();
-			if (debug) {
-				builder.append("puppet.options  = \"--verbose --debug\"")
+			if (ppc.isDebug()) {
+				builder.append("puppet.options  = \"" + " --verbose --debug\"")
 						.append("\n");
 			}
 
@@ -141,12 +151,11 @@ public final class VagrantConfigurationUtilities {
 			String proxy = ppc.getProxy();
 			if (proxy != null) {
 				builder.append(
-						"puppet.facter = { \"proxy\" => \"" + proxy + "\" }")
-						.append("\n");
+						"puppet.facter = { \"http_proxy\" => \"" + proxy
+								+ "\"}").append("\n");
 			}
 
 			builder.append("end").append("\n");
 		}
 	}
-
 }

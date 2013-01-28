@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import com.guigarage.vagrant.configuration.net.Network;
 import com.guigarage.vagrant.util.Iterables;
 import com.guigarage.vagrant.util.VagrantUtils;
 
@@ -30,7 +31,7 @@ public class VagrantVmConfig {
 
 	private final String name;
 
-	private final String hostOnlyIp;
+	private final Network network;
 
 	private final String boxName;
 
@@ -44,24 +45,26 @@ public class VagrantVmConfig {
 	 * Constructs a configuration.
 	 * 
 	 * @param name
-	 *            name of the VM. This can be null
-	 * @param ip
-	 *            the static ip of the VM. This can be null
+	 *            name of the VM. This can be <code>null</code>
+	 * @param network
+	 *            the network of this box. This can be <code>null</code>
 	 * @param hostName
-	 *            the host name of the VM. This can be null
+	 *            the host name of the VM. This can be <code>null</code>
 	 * @param boxName
 	 *            the name of the Vagrant box this VM depends on.
 	 * @param boxUrl
 	 *            the url of the Vagrant box this VM depends on
 	 * @param portForwardings
-	 *            the configuration for all port forwardings. This can be null
+	 *            the configuration for all port forwardings. This can be
+	 *            <code>null</code>
 	 * @param puppetProvisionerConfig
-	 *            the puppet configuration for the VM. This can be null
+	 *            the puppet configuration for the VM. This can be
+	 *            <code>null</code>
 	 * @param guiMode
-	 *            true if the VM should run in gui mode. This means that
-	 *            VirtualBox is not running in headless mode
+	 *            <code>true</code> if the VM should run in gui mode. This means
+	 *            that VirtualBox is not running in headless mode
 	 */
-	public VagrantVmConfig(String name, String ip, String hostName,
+	public VagrantVmConfig(String name, Network network, String hostName,
 			String boxName, URL boxUrl,
 			Iterable<VagrantPortForwarding> portForwardings,
 			PuppetProvisionerConfig puppetProvisionerConfig, boolean guiMode) {
@@ -70,7 +73,7 @@ public class VagrantVmConfig {
 			this.portForwardings.add(portForwarding);
 		}
 		this.puppetProvisionerConfig = puppetProvisionerConfig;
-		this.hostOnlyIp = ip;
+		this.network = network;
 		this.name = name;
 		this.boxName = boxName;
 		this.boxUrl = boxUrl;
@@ -80,7 +83,7 @@ public class VagrantVmConfig {
 
 	private VagrantVmConfig(Builder builder) {
 		this.name = builder.withName;
-		this.hostOnlyIp = builder.withHostOnlyIp;
+		this.network = builder.withNetwork;
 		this.hostName = builder.withHostName;
 		this.boxName = checkNotNull(builder.withBoxName, "No boxName defined");
 		this.boxUrl = builder.withBoxUrl;
@@ -105,7 +108,7 @@ public class VagrantVmConfig {
 
 		private String withName;
 
-		private String withHostOnlyIp;
+		private Network withNetwork;
 
 		private String withBoxName;
 
