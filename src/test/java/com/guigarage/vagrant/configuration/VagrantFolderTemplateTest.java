@@ -9,7 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import com.guigarage.vagrant.Vagrant;
+import com.guigarage.vagrant.VagrantEnvironmentFactory;
 import com.guigarage.vagrant.model.VagrantEnvironment;
 
 public class VagrantFolderTemplateTest {
@@ -36,9 +36,12 @@ public class VagrantFolderTemplateTest {
 				.withVagrantFolderTemplateConfiguration(
 						folderTemplateConfiguration).build();
 
-		Vagrant vagrant = new Vagrant(true);
-		VagrantEnvironment environment = vagrant.createEnvironment(
-				this.vagrantPath.getRoot(), vagrantConfiguration);
+		VagrantEnvironment environment = VagrantEnvironmentFactory
+				.builder()
+				.withDebug(true)
+				.build()
+				.createEnvironment(this.vagrantPath.getRoot(),
+						vagrantConfiguration);
 		File vagrantFolder = new File(environment.getRootPath());
 		File createdFolder = new File(vagrantFolder, "testFolder");
 		assertTrue(createdFolder.exists());
@@ -64,9 +67,12 @@ public class VagrantFolderTemplateTest {
 				.withVagrantFolderTemplateConfiguration(
 						folderTemplateConfiguration).build();
 
-		Vagrant vagrant = new Vagrant(true);
-		VagrantEnvironment environment = vagrant.createEnvironment(
-				this.vagrantPath.getRoot(), vagrantConfiguration);
+		VagrantEnvironment environment = VagrantEnvironmentFactory
+				.builder()
+				.withDebug(true)
+				.build()
+				.createEnvironment(this.vagrantPath.getRoot(),
+						vagrantConfiguration);
 		File vagrantFolder = new File(environment.getRootPath());
 		File createdFolder = new File(vagrantFolder, "testFolder");
 		assertTrue(createdFolder.exists());
@@ -86,8 +92,12 @@ public class VagrantFolderTemplateTest {
 				.builder().withVagrantEnvironmentConfig(environmentConfig)
 				.build();
 
-		new Vagrant(true).createEnvironment(this.vagrantPath.getRoot(),
-				vagrantConfiguration);
+		VagrantEnvironmentFactory
+				.builder()
+				.withDebug(true)
+				.build()
+				.createEnvironment(this.vagrantPath.getRoot(),
+						vagrantConfiguration);
 	}
 
 	@Test(expected = NullPointerException.class)

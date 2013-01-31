@@ -5,6 +5,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import org.apache.commons.io.FileUtils;
 import org.jruby.RubyObject;
 import org.jruby.embed.LocalContextScope;
@@ -17,26 +22,18 @@ import com.guigarage.vagrant.configuration.VagrantFileProvider;
 import com.guigarage.vagrant.model.VagrantEnvironment;
 import com.guigarage.vagrant.util.Iterables;
 
-public class Vagrant {
+public class VagrantEnvironmentFactory {
 
-	private ScriptingContainer scriptingContainer;
+	private final ScriptingContainer scriptingContainer;
 
-	public Vagrant() {
-		this(false);
-	}
-
-	public Vagrant(boolean debug) {
+	public VagrantEnvironmentFactory(Builder builder) {
 		this.scriptingContainer = new ScriptingContainer(
 				LocalContextScope.SINGLETHREAD);
-		if (debug) {
-			debug();
-		}
-	}
-
-	private void debug() {
 		Map<?, ?> currentEnv = this.scriptingContainer.getEnvironment();
 		Map<Object, Object> newEnv = new HashMap<Object, Object>(currentEnv);
-		newEnv.put("VAGRANT_LOG", "DEBUG");
+		if (builder.withDebug) {
+			newEnv.put("VAGRANT_LOG", "DEBUG");
+		}
 		this.scriptingContainer.setEnvironment(newEnv);
 	}
 
@@ -67,7 +64,8 @@ public class Vagrant {
 
 	public VagrantEnvironment createEnvironment(File path,
 			VagrantEnvironmentConfig environmentConfig,
-			Iterable<? extends VagrantFileProvider> fileTemplates) throws IOException {
+			Iterable<? extends VagrantFileProvider> fileTemplates)
+			throws IOException {
 		return createEnvironment(path,
 				VagrantConfigurationUtilities
 						.createVagrantFileContent(environmentConfig),
@@ -115,6 +113,22 @@ public class Vagrant {
 			folderTemplate.copyIntoVagrantFolder(path);
 		}
 		return createEnvironment(path);
+	}
+
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
+	@Accessors(fluent = true, chain = true)
+	@Setter
+	public static class Builder {
+		private boolean withDebug;
+
+		public VagrantEnvironmentFactory build() {
+			return new VagrantEnvironmentFactory(this);
+		}
+
 	}
 
 }

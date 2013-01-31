@@ -12,7 +12,7 @@ import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
-import com.guigarage.vagrant.Vagrant;
+import com.guigarage.vagrant.VagrantEnvironmentFactory;
 import com.guigarage.vagrant.configuration.VagrantConfiguration;
 import com.guigarage.vagrant.configuration.VagrantConfigurationUtilities;
 import com.guigarage.vagrant.configuration.VagrantEnvironmentConfig;
@@ -105,7 +105,8 @@ public class VagrantTestRule extends TestWatcher {
 		} catch (IOException e) {
 			throw new VagrantException("Error writing to " + vagrantFile, e);
 		}
-		return new Vagrant(true).createEnvironment(this.vagrantDir);
+		return VagrantEnvironmentFactory.builder().withDebug(true).build()
+				.createEnvironment(this.vagrantDir);
 	}
 
 	@Override

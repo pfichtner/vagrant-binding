@@ -10,7 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import com.guigarage.vagrant.Vagrant;
+import com.guigarage.vagrant.VagrantEnvironmentFactory;
 import com.guigarage.vagrant.model.VagrantVm;
 
 public class VagrantConfigurationTest {
@@ -29,8 +29,10 @@ public class VagrantConfigurationTest {
 				null, null, false));
 		VagrantEnvironmentConfig config = new VagrantEnvironmentConfig(
 				vmConfigs);
-		Iterable<VagrantVm> vms = new Vagrant(true).createEnvironment(
-				this.vagrantTempDir.getRoot(), config).getAllVms();
+		Iterable<VagrantVm> vms = VagrantEnvironmentFactory.builder()
+				.withDebug(true).build()
+				.createEnvironment(this.vagrantTempDir.getRoot(), config)
+				.getAllVms();
 		assertEquals("unitTestVm", vms.iterator().next().getName());
 	}
 

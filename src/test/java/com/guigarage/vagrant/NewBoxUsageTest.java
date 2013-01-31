@@ -22,7 +22,6 @@ public class NewBoxUsageTest {
 	public void testInitWithNewBox() throws IOException {
 		String boxName = "unitTestBox" + System.currentTimeMillis();
 
-		Vagrant vagrant = new Vagrant(true);
 		VagrantVmConfig vmConfig = VagrantVmConfig.builder()
 				.withBoxName(boxName)
 				.withBoxUrl(VagrantUtils.getInstance().getLucid32Url())
@@ -30,8 +29,9 @@ public class NewBoxUsageTest {
 		VagrantEnvironmentConfig envConfig = VagrantEnvironmentConfig.builder()
 				.withVagrantVmConfig(vmConfig).build();
 
-		VagrantEnvironment environment = vagrant.createEnvironment(
-				this.vagrantTempDir.getRoot(), envConfig);
+		VagrantEnvironment environment = VagrantEnvironmentFactory.builder()
+				.withDebug(true).build()
+				.createEnvironment(this.vagrantTempDir.getRoot(), envConfig);
 		try {
 			environment.up();
 		} finally {
