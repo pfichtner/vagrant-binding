@@ -21,11 +21,26 @@ public final class VagrantUtils {
 
 	private static final String VAGRANT_BASE = "http://files.vagrantup.com/";
 
+	private static final String PACKAGE_BASE = "com/guigarage/vagrant/master/";
+
+	@Getter
+	private static final VagrantUtils instance = new VagrantUtils();
+
 	@Getter(lazy = true)
 	private final URL lucid32Url = createUrl(VAGRANT_BASE + "lucid32.box");
 
 	@Getter(lazy = true)
 	private final URL lucid64Url = createUrl(VAGRANT_BASE + "lucid64.box");
+
+	@Deprecated
+	@Getter(lazy = true)
+	private final String lucid32MasterContent = createLucidMasterContent(PACKAGE_BASE
+			+ "lucid32");
+
+	@Deprecated
+	@Getter(lazy = true)
+	private final String lucid64MasterContent = createLucidMasterContent(PACKAGE_BASE
+			+ "lucid64");
 
 	private static URL createUrl(String url) {
 		try {
@@ -35,8 +50,13 @@ public final class VagrantUtils {
 		}
 	}
 
-	@Getter
-	private static VagrantUtils instance = new VagrantUtils();
+	private String createLucidMasterContent(String fileName) {
+		try {
+			return IOUtils.toString(load(fileName));
+		} catch (IOException exception) {
+			throw new RuntimeException(exception);
+		}
+	}
 
 	/**
 	 * Creates a URL for a resource from classpath.
@@ -60,38 +80,6 @@ public final class VagrantUtils {
 			return url;
 		}
 		throw new IOException("Can't create URL for path " + path);
-	}
-
-	/**
-	 * Returns a basic Vagrantfile that uses the lucid32 box as template.
-	 * 
-	 * @return the content of the Vagrantfile as String
-	 * @deprecated Really used!? Only refereed by TestCases
-	 */
-	@Deprecated
-	public String getLucid32MasterContent() {
-		try {
-			return IOUtils
-					.toString(load("com/guigarage/vagrant/master/lucid32"));
-		} catch (IOException exception) {
-			throw new RuntimeException(exception);
-		}
-	}
-
-	/**
-	 * Returns a basic Vagrantfile that uses the lucid64 box as template.
-	 * 
-	 * @return the content of the Vagrantfile as String
-	 * @deprecated Really used!? Only refereed by TestCases
-	 */
-	@Deprecated
-	public String getLucid64MasterContent() {
-		try {
-			return IOUtils
-					.toString(load("com/guigarage/vagrant/master/lucid64"));
-		} catch (IOException exception) {
-			throw new RuntimeException(exception);
-		}
 	}
 
 }
