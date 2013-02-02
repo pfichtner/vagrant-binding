@@ -9,8 +9,8 @@ import org.jruby.runtime.builtin.IRubyObject;
 import com.guigarage.vagrant.util.VagrantException;
 
 /**
- * This class gives you acces to on VM. You can manage the lifecycle of this VM
- * and acces the VM by SSH.
+ * This class gives you access to on VM. You can manage the lifecycle of this VM
+ * and access the VM by SSH.
  * 
  * @author hendrikebbers
  */
