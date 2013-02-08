@@ -1,5 +1,6 @@
 package com.guigarage.vagrant.configuration;
 
+import static com.guigarage.vagrant.util.Iterables.getOnlyElement;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class VagrantConfigurationTest {
 				.withDebug(true).build()
 				.createEnvironment(this.vagrantTempDir.getRoot(), config)
 				.getAllVms();
-		assertEquals("unitTestVm", vms.iterator().next().getName());
+		assertEquals("unitTestVm", getOnlyElement(vms).getName());
 	}
 
 }

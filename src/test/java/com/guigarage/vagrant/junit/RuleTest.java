@@ -1,5 +1,6 @@
 package com.guigarage.vagrant.junit;
 
+import static com.guigarage.vagrant.util.Iterables.getOnlyElement;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Rule;
@@ -15,7 +16,7 @@ public class RuleTest {
 
 	@Test
 	public void testDummy() {
-		assertTrue(this.testRule.getEnvironment().getAllVms().iterator().next()
+		assertTrue(getOnlyElement(this.testRule.getEnvironment().getAllVms())
 				.isRunning());
 	}
 
