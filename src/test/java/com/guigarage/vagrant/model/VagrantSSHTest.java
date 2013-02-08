@@ -49,8 +49,9 @@ public class VagrantSSHTest {
 
 	@Test
 	public void testSSHUpload() throws IOException {
-		VagrantSSHConnection connection = this.vagrantEnvironment
-				.getEnvironment().getAllVms().iterator().next()
+		Iterable<VagrantVm> allVms = this.vagrantEnvironment.getEnvironment()
+				.getAllVms();
+		VagrantSSHConnection connection = getOnlyElement(allVms)
 				.createConnection();
 		File fileToUpload = new File(this.tempDir.newFolder("vagrant"), "test");
 		write(fileToUpload, TEST_STRING);
