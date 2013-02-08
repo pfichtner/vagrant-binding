@@ -1,5 +1,6 @@
 package com.guigarage.vagrant.model;
 
+import static com.guigarage.vagrant.util.Iterables.getOnlyElement;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -38,8 +39,8 @@ public class VagrantSSHTest {
 
 	@Test
 	public void testSSHExecute() throws IOException {
-		VagrantSSHConnection connection = this.vagrantEnvironment
-				.getEnvironment().getAllVms().iterator().next()
+		VagrantSSHConnection connection = getOnlyElement(
+				this.vagrantEnvironment.getEnvironment().getAllVms())
 				.createConnection();
 		connection.execute("touch /vagrant/" + TESTFILE_1, true);
 		assertTrue(new File(this.vagrantEnvironment.getVagrantDir(), TESTFILE_1)
